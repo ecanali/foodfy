@@ -1,0 +1,31 @@
+{% extends 'site/layout.njk' %}
+
+{% block head %}
+    <title>Chefs</title>
+{% endblock head %}
+
+{% block content %}
+    
+    <section>
+        <div class="grid-chefs-admin">
+            
+            {% for chef in chefs %}
+
+            <div class="chef-admin" id="{{ chef.name }}">
+                <img src="{{ chef.avatar_url }}" alt="{{ chef.name }}">
+                <div class="texto-chef-admin">
+                    <h3>{{ chef.name }}</h3>
+                    {% if chef.total_recipes == 1 %}
+                        <h4>{{ chef.total_recipes }} receita</h4>
+                        {% else %}
+                        <h4>{{ chef.total_recipes }} receitas</h4>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% endfor %}
+
+        </div>
+    </section>
+
+{% endblock content %}

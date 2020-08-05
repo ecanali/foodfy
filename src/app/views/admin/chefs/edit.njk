@@ -1,0 +1,43 @@
+{% extends '../layout.njk' %}
+
+{% block head %}
+    <title>Foodfy - Admin: {{ chef.name }}</title>
+{% endblock head %}
+
+{% block content %}
+    <main>
+        <form action="/admin/chefs?_method=PUT" method="POST">
+        
+            <div class="recipe-header-admin">
+                <h2>Editando chef</h2>
+                
+                <div class="admin-buttons">
+                    <button id="form-update" class="admin-button-1" type="submit">Salvar chef</button>
+                </div>
+            </div>
+
+            {% include 'admin/chefs/fields.njk' %}
+
+            {# <input type="hidden" id="idIndex1" name="idIndex1" value=""> #}
+
+            <input 
+                type="hidden" 
+                name="id" 
+                value="{{ chef.id }}"
+            >
+
+        </form>
+        <form id="form-delete" action="/admin/chefs?_method=DELETE" method="POST">
+            {# <input type="hidden" id="idIndex2" name="idIndex2" value=""> #}
+            <input type="hidden" name="id" value="{{ chef.id }}">
+            <input type="hidden" name="totalRecipes" value="{{ chef.total_recipes }}">
+
+            <button class="admin-button-2" type="submit">Deletar</button>
+        </form>
+    </main>
+
+    {% include '../confirm.njk' %}
+
+    {# <script src="/scripts/admin-scripts.js"></script> #}
+
+{% endblock content %}

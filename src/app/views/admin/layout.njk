@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/styles/styles.css">
+        
+        {% block head %}
+            <title>Foodfy - Admin</title>
+        {% endblock head %}
+        
+    </head>
+    <body>
+        
+        <header class="nav-admin">
+            <nav class="nav-admin">
+                <a href="/"><img src="/assets/logo-white.png" alt="logo-foodfy-white"></a>
+                <a href="/admin/recipes">RECEITAS</a>
+                <a href="/admin/chefs">CHEFS</a>
+            </nav>
+        </header>
+
+        <div class="content">
+
+            {% block content %}
+            {% endblock content %}
+
+        </div>
+
+        <script src="/scripts/admin-scripts.js"></script>
+
+    </body>
+</html>

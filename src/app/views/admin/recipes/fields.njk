@@ -1,0 +1,114 @@
+<div class="item">
+    <h4>Imagem da receita</h4>
+    <div>
+        <input
+            type="url"
+            name="image"
+            placeholder="http://"
+            value="{{ recipe.image }}"
+            required="required"
+        >
+    </div>
+</div>
+
+<div class="item">
+    <h4>Título</h4>
+    <div>
+        <input
+            type="text"
+            name="title"
+            value="{{ recipe.title }}"
+            required="required"
+        >
+    </div>
+</div>
+
+<div class="item">
+    <h4>Chef</h4>
+    <div>
+        <select name="chef">
+
+            <option value="" style="color:#8e8e8e">Selecione um chef</option>
+
+            {% for chef in chefOptions %}
+
+                <option 
+                    value="{{ chef.id }}" 
+                    {% if recipe.chef_id == chef.id %} 
+                        selected 
+                    {% endif %}>
+                    {{ chef.name }}
+                </option>
+
+            {% endfor %}
+        </select>
+    </div>
+</div>
+
+<div class="item">
+    <h4>Ingredientes</h4>
+    <div id="ingredients">
+        {% if not recipe.ingredients %}
+            <div class="ingredient">
+                <input
+                    type="text"
+                    name="ingredients[]"
+                    placeholder="Ingrediente"
+                    value=""
+                >
+            </div>
+            {% else %}
+                {% for ingredient in recipe.ingredients %}
+                    <div class="ingredient">
+                        <input
+                            type="text"
+                            name="ingredients[]"
+                            placeholder="Ingrediente"
+                            value="{{ ingredient }}"
+                        >
+                    </div>
+                {% endfor %}
+        {% endif %}
+    </div>
+    <button type="button" class="add-ingredient">Adicionar novo ingrediente</button>
+</div>
+
+<div class="item">
+    <h4>Modo de preparo</h4>
+    <div id="steps">
+        {% if not recipe.preparation %}
+            <div class="step">
+                <input
+                    type="text"
+                    name="preparation[]"
+                    placeholder="Passo"
+                    value=""
+                >
+            </div>
+            {% else %}
+                {% for step in recipe.preparation %}
+                    <div class="step">
+                        <input
+                            type="text"
+                            name="preparation[]"
+                            placeholder="Passo"
+                            value="{{ step }}"
+                        >
+                    </div>
+                {% endfor %}
+        {% endif %}
+    </div>
+    <button type="button" class="add-step">Adicionar novo passo</button>
+</div>
+
+<div class="item">
+    <h4>Informações adicionais</h4>
+    <div>
+        <textarea 
+            name="information"
+            class="information"
+            cols="40" 
+            rows="5"
+            >{{ recipe.information }}</textarea>
+    </div>
+</div>

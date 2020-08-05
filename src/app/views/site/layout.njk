@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/styles/styles.css">
+        
+        {% block head %}
+            <title>Foodfy</title>
+        {% endblock head %}
+        
+    </head>
+    <body>
+        <div class="content">
+            <header>
+                <nav>
+                    <a href="/"><img src="/assets/logo.png" alt="logo-foodfy"></a>
+                    <a href="/about" class="sublinhado">Sobre</a>
+                    <a href="/recipes" class="sublinhado">Receitas</a>
+                    <a href="/chefs" class="sublinhado">Chefs</a>
+                    <a href="/admin/recipes" class="sublinhado">Admin</a>
+
+                    <form action="/recipes/filter" method="get">
+                        <input 
+                            type="text"
+                            name="filter"
+                            placeholder="Buscar uma receita"
+                            value="{{ filter }}"
+                        >
+                        <button type="submit">Buscar</button>
+                    </form>
+                </nav>
+            </header>
+
+            {% block content %}
+            {% endblock content %}
+
+        </div>
+
+        <footer>
+            <div class="rodape">
+                <p>Todos direitos reservados, receitas Foodfy.</p>
+            </div>
+        </footer>
+
+        <script src="/scripts/scripts.js"></script>
+
+    </body>
+
+</html>

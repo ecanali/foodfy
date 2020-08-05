@@ -1,0 +1,54 @@
+{% extends '../layout.njk' %}
+
+{% block head %}
+    <title>Foodfy - Admin: {{ chef.name }}</title>
+{% endblock head %}
+
+{% block content %}
+    <main>
+
+        <div class="recipe-header-admin">
+            <h2>Chef: {{ chef.name }}</h2>
+            <a href="/admin/chefs/{{ chef.id }}/edit">Editar chef</a>
+        </div>
+
+        <img class="chef-img" src="{{ chef.avatar_url }}" alt="{{ chef.name }}">
+
+        <div class="recipe-title">
+            <h1>{{ chef.name }}</h1>
+            {% if chef.total_recipes == 1 %}
+                <h3>{{ chef.total_recipes }} receita</h3>
+                {% else %}
+                <h3>{{ chef.total_recipes }} receitas</h3>
+            {% endif %}
+        </div>
+
+        <section>
+            <div class="header-index">
+                <h2 class="h2-chef-admin">Receitas</h2>
+            </div>
+            
+            <div class="grid-receitas-admin">
+                
+                {% for recipe in recipes %}
+
+                <div class="receita-admin" id="{{ recipe.title }}">
+                    <img src="{{ recipe.image }}" alt="{{ recipe.title }}">
+                    <div class="texto-receita-admin">
+                        <h3>{{ recipe.title }}</h3>
+                        <p>por {{ chef.name }}</p>
+                        {# <a>Visualizar</a> #}
+                        <a href="/admin/recipes/{{ recipe.id }}">Visualizar</a>
+                    </div>
+                </div>
+
+                {% endfor %}
+
+            </div>
+        </section>
+
+    </main>
+
+    {# <script src="/scripts/admin-scripts.js"></script> #}
+
+{% endblock content %}
