@@ -29,6 +29,10 @@ main {
     flex-direction: column;
 }
 
+img {
+    object-fit: cover;
+}
+
 /* NAVEGAÇÃO */
 header {
     max-width: 940px;
