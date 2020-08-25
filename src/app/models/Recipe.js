@@ -20,8 +20,7 @@ module.exports = {
 
     },
 
-    create(data, callback) {
-        
+    create(data) {
         const query = `
             INSERT INTO recipes (
                 chef_id,
@@ -45,11 +44,7 @@ module.exports = {
             date(Date.now())
         ]
 
-        db.query(query, values, function(err, results) {
-            if(err) throw `Database Error! ${err}`
-
-            callback(results.rows[0])
-        })
+        return db.query(query, values)
 
     },
 
@@ -61,19 +56,15 @@ module.exports = {
         })
     },
 
-    find(id, callback) {
-        db.query(`
+    find(id) {
+        return db.query(`
         SELECT recipes.*, chefs.name AS chef_name
         FROM recipes
         LEFT JOIN chefs ON (recipes.chef_id = chefs.id)
-        WHERE recipes.id = $1`, [id], function(err, results) {
-            if(err) throw `Database Error! ${err}`
-
-            callback(results.rows[0])
-        })
+        WHERE recipes.id = $1`, [id])
     },
 
-    update(data, callback) {
+    update(data) {
         const query = `
             UPDATE recipes SET
                 chef_id = ($1),
@@ -95,24 +86,27 @@ module.exports = {
             data.id
         ]
         
-        db.query(query, values, function(err, results) {
-            if(err) throw `Database Error! ${err}`
-                
-            callback()
-        })
+        return db.query(query, values)
     },
 
-    delete(id, callback) {
-        db.query(`
-            DELETE FROM recipes
-            WHERE id = $1
-        `,
-        [id],
-        function(err, results) {
-            if(err) throw `Database Error! ${err}`
+    delete(id) {
+        return db.query(`DELETE FROM recipes WHERE id = $1`, [id])
+    },
 
-            return callback()
-        })
+    files(recipeId) {
+        return db.query(`
+            SELECT files.id, files.name, files.path
+            FROM files
+            LEFT JOIN recipe_files ON (files.id = recipe_files.file_id)
+            LEFT JOIN recipes ON (recipe_files.recipe_id = recipes.id)
+            WHERE recipes.id = $1
+        `, [recipeId])
+    },
+
+    relatedImagesDB(id) {
+        return db.query(`
+            SELECT * FROM recipe_files WHERE recipe_id = $1
+        `, [id])
     },
 
     paginate(params) {
