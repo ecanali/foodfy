@@ -58,12 +58,13 @@ module.exports = {
         Recipe.paginate(params)
     },
 
-    show(req, res) {
-        Recipe.find(req.params.id, function(recipe) {
-            if (!recipe) return res.send('Recipe not found')
+    async show(req, res) {
+        let results = await Recipe.find(req.params.id)
+        const recipe = results.rows[0]
 
-            return res.render('site/recipe', { recipe })
-        })
+        if (!recipe) return res.send('Recipe not found')
+        
+        return res.render('site/recipe', { recipe })
     },
 
     chefsList(req, res) {

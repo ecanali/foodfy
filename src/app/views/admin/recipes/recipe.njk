@@ -10,7 +10,34 @@
             <h2>Receita: {{ recipe.title }}</h2>
             <a href="/admin/recipes/{{ recipe.id }}/edit">Editar receita</a>
         </div>
-        <img class="detail-img" src="{{ recipe.image }}" alt="{{ recipe.title }}">
+
+        {# <img class="detail-img" src="{{ recipe.image }}" alt="{{ recipe.title }}"> #}
+        
+        <div class="gallery">
+            <div class="highlight">
+                {% if not files[0] %}
+                    <img src="http://placehold.it/940x280?text=RECEITA SEM FOTO" />
+                {% else %}
+                    <img 
+                        src="{{ files[0].src }}" 
+                        alt="{{ files[0].name }}"
+                    >
+                {% endif %}
+            </div>
+            <div class="gallery-preview">
+                {% for image in files %}
+                    <img 
+                        src="{{ image.src }}" 
+                        alt="{{ image.name }}"
+                        {% if loop.index0 == 0 %}
+                            class="active"
+                        {% endif %}
+                        onclick="ImageGallery.setImage(event)"
+                    >
+                {% endfor %}
+            </div>
+        </div>
+
         <div class="recipe-title">
             <h1>{{ recipe.title }}</h1>
             <h3>por {{ recipe.chef_name }}</h3>

@@ -12,13 +12,23 @@
 
 <div class="item">
     <h4>Avatar</h4>
-    <div>
-        <input
+    <div class="avatar-upload">
+        <input 
+            id="photos-input"
+            class="avatar-input"
+            type="file" 
+            name="photos" 
+            accept="image/*"
+            {# onchange="PhotosUpload.handleFileInput(event)" #}
+        >
+        Enviar Avatar
+    </div>
+        {# <input
             type="url"
             name="avatar_url"
             placeholder="http://"
             value="{{ chef.avatar_url }}"
             required="required"
         >
-    </div>
+    </div> #}
 </div>

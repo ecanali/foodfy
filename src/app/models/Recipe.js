@@ -1,23 +1,32 @@
 const db = require('../../config/db')
 const { date } = require('../lib/utils')
+const File = require('../models/File')
 
 module.exports = {
 
     // O 'all' vai sumir qdo começar a incluir o Filtro e Paginação
     // Acredito que não vale a pena se preocupar em modificar a Query pra BD
     // agora pra trazer o Nome do Chef junto na página de Index, só depois 
-    all(callback) {
+    // all(callback) {
 
-        db.query(`
+    //     db.query(`
+    //         SELECT recipes.*, chefs.name AS chef_name
+    //         FROM recipes
+    //         LEFT JOIN chefs ON (recipes.chef_id = chefs.id)
+    //         ORDER BY title ASC`, function(err, results) {
+    //         if(err) throw `Database Error! ${err}`
+
+    //         callback(results.rows)
+    //     })
+
+    // },
+
+    all() {
+        return db.query(`
             SELECT recipes.*, chefs.name AS chef_name
             FROM recipes
             LEFT JOIN chefs ON (recipes.chef_id = chefs.id)
-            ORDER BY title ASC`, function(err, results) {
-            if(err) throw `Database Error! ${err}`
-
-            callback(results.rows)
-        })
-
+            ORDER BY title ASC`)
     },
 
     create(data) {
@@ -89,7 +98,8 @@ module.exports = {
         return db.query(query, values)
     },
 
-    delete(id) {
+    async delete(id) {
+        await File.delete(id)
         return db.query(`DELETE FROM recipes WHERE id = $1`, [id])
     },
 

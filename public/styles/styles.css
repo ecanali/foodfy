@@ -330,6 +330,7 @@ h2.h2-site {
 /* RECIPE PAGE */
 main img {
     border-radius: 15px;
+    margin-bottom: 30px;
 }
 
 .detail-img {
@@ -747,4 +748,106 @@ form .item #photos-preview img {
 
 #photos-preview .photo:hover i {
     opacity: 1;
+}
+
+/* RECIPE GALLERY */
+.gallery {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.highlight {
+    width: 940px;
+    height: 280px;
+}
+.highlight > img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: none;
+    object-position: 50% 50%;
+}
+
+.gallery-preview {
+    display: flex;
+    justify-content: flex-end;
+
+    width: 290px;
+    height: 50px;   
+
+    justify-self: flex-end;
+    align-self: flex-end;
+}
+
+.gallery-preview img {
+    height: 50px;
+    width: 50px;
+    
+    border: 1px solid #DDD;
+    border-radius: 4px;
+    margin-bottom: 0;
+    margin-left: 10px;
+    margin-top: 8px;
+
+    object-fit: cover;
+
+    opacity: 0.5;
+
+    cursor: pointer;
+
+    transition: 200ms;
+}
+
+.gallery-preview img:hover,
+.gallery-preview img.active {
+    opacity: 1;
+}
+
+/* CHEF AVATAR UPLOAD */
+/* .avatar-button {
+    height: 37px;
+    width: 139px;
+    background-color: #6558C3;
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 19px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+} */
+
+.avatar-upload {
+    position: relative;
+    height: 37px;
+    width: 139px;
+    background-color: #6558C3;
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 19px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+#photos-input.avatar-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    display: block;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+
+    padding: 0;
+
+    cursor: pointer;
 }

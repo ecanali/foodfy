@@ -3,11 +3,11 @@ const File = require('../models/File')
 
 module.exports = {
 
-    index(req, res) {
-        Recipe.all(function(recipes) {
-
-            return res.render('admin/recipes/index', { recipes })
-        })
+    async index(req, res) {
+        let results = await Recipe.all()
+        const recipes = results.rows
+        
+        return res.render('admin/recipes/index', { recipes })
     },
 
     create(req, res) {
@@ -51,8 +51,15 @@ module.exports = {
         const recipe = results.rows[0]
 
         if (!recipe) return res.send('Recipe not found')
-        
-        return res.render('admin/recipes/recipe', { recipe })
+
+        // get images
+        results = await Recipe.files(recipe.id)
+        const files = results.rows.map(recipe => ({
+        ...recipe,
+        src:`${req.protocol}://${req.headers.host}${recipe.path.replace("public", "")}`
+        }))
+
+        return res.render('admin/recipes/recipe', { recipe, files })
     },
 
     async edit(req, res) {
@@ -79,10 +86,9 @@ module.exports = {
         const keys = Object.keys(req.body)
 
         for (let key of keys) {
-            if (req.body[key] == "" && key != "removed_files")
+            if (req.body[key] == "" && key != "removed_files" && req.files.length == 0)
                 return res.send("Please, fill out all fields!")
         }
-        //
 
         if (req.files.length != 0) {
             const recipeId = req.body.id
@@ -103,21 +109,20 @@ module.exports = {
             const lastIndex = removedFiles.length - 1
             removedFiles.splice(lastIndex, 1) // [1,2,3]
 
-            const removedFilesPromise = removedFiles.map(id => File.delete(id))
+            const removedFilesPromise = removedFiles.map(id => File.removeDeletedFileFromPUT(id))
 
             await Promise.all(removedFilesPromise)
         }
 
-        //
         await Recipe.update(req.body)
 
         return res.redirect(`/admin/recipes/${req.body.id}`)
     },
 
     delete(req, res) {
-        Recipe.delete(req.body.id, function() {
-            return res.redirect('/admin/recipes')
-        })
+        Recipe.delete(req.body.id)
+        
+        return res.redirect('/admin/recipes')
     }
 
 }
