@@ -12,6 +12,18 @@
 
 <div class="item">
     <h4>Avatar</h4>
+    
+    {% if files %}
+        <div>
+            <input
+                type="url"
+                class="avatar-url"
+                value="http:{{ files[0].src }}"
+                readonly
+            >
+        </div>
+    {% endif %}
+    
     <div class="avatar-upload">
         <input 
             id="photos-input"
@@ -19,16 +31,8 @@
             type="file" 
             name="photos" 
             accept="image/*"
-            {# onchange="PhotosUpload.handleFileInput(event)" #}
+            onchange="PhotosUpload.handleFileInput(event)"
         >
         Enviar Avatar
     </div>
-        {# <input
-            type="url"
-            name="avatar_url"
-            placeholder="http://"
-            value="{{ chef.avatar_url }}"
-            required="required"
-        >
-    </div> #}
 </div>

@@ -10,11 +10,11 @@ module.exports = {
         return res.render('admin/recipes/index', { recipes })
     },
 
-    create(req, res) {
-        Recipe.chefsSelectOptions(function(options) {
+    async create(req, res) {
+        let results = await Recipe.chefsSelectOptions()
+        const options = results.rows
 
-            return res.render('admin/recipes/create', { chefOptions: options })
-        })
+        return res.render('admin/recipes/create', { chefOptions: options })
     },
 
     async post(req, res) {
@@ -75,10 +75,10 @@ module.exports = {
         src:`${req.protocol}://${req.headers.host}${recipe.path.replace("public", "")}`
         }))
 
-        Recipe.chefsSelectOptions(function(options) {
+        results = await Recipe.chefsSelectOptions()
+        const options = results.rows
 
-                return res.render('admin/recipes/edit', { recipe, chefOptions: options, files })
-        })
+        return res.render('admin/recipes/edit', { recipe, chefOptions: options, files })
     },
 
     async put(req, res) {
@@ -119,8 +119,8 @@ module.exports = {
         return res.redirect(`/admin/recipes/${req.body.id}`)
     },
 
-    delete(req, res) {
-        Recipe.delete(req.body.id)
+    async delete(req, res) {
+        await Recipe.delete(req.body.id)
         
         return res.redirect('/admin/recipes')
     }

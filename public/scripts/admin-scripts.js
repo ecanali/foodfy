@@ -78,6 +78,7 @@ const PhotosUpload = {
                 image.src = String(reader.result)
 
                 const div = PhotosUpload.getContainer(image)
+                if (PhotosUpload.preview)
                 PhotosUpload.preview.appendChild(div)
             }
 
@@ -96,18 +97,21 @@ const PhotosUpload = {
             return true
         }
 
-        const photosDiv = []
-        preview.childNodes.forEach(item => {
-            if (item.classList && item.classList.value == "photo")
-                photosDiv.push(item)
-        })
+        if (preview) {
+            const photosDiv = []
+            preview.childNodes.forEach(item => {
+                if (item.classList && item.classList.value == "photo")
+                    photosDiv.push(item)
+            })
 
-        const totalPhotos = fileList.length + photosDiv.length
-        if (totalPhotos > uploadLimit) {
-            alert("Você atingiu o limite máximo de fotos")
-            event.preventDefault()
-            return true
+            const totalPhotos = fileList.length + photosDiv.length
+            if (totalPhotos > uploadLimit) {
+                alert("Você atingiu o limite máximo de fotos")
+                event.preventDefault()
+                return true
+            }
         }
+
 
         return false
     },

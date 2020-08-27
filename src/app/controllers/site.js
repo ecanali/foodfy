@@ -2,14 +2,14 @@ const Chef = require('../models/Chef')
 const Recipe = require('../models/Recipe')
 
 module.exports = {
-    index(req, res) {
-        Recipe.all(function(recipes) {
-
-            return res.render('site/index', { recipes })
-        })
+    async index(req, res) {
+        let results = await Recipe.all()
+        const recipes = results.rows
+        
+        return res.render('site/index', { recipes })
     },
 
-    recipesList(req, res) {
+    async recipesList(req, res) {
         let { page, limit } = req.query
 
         page = page || 1
@@ -30,10 +30,10 @@ module.exports = {
             }
         }
     
-        Recipe.paginate(params)
+        await Recipe.paginate(params)
     },
 
-    filteredRecipesList(req, res) {
+    async filteredRecipesList(req, res) {
         let { filter, page, limit } = req.query
 
         page = page || 1
@@ -55,7 +55,7 @@ module.exports = {
             }
         }
     
-        Recipe.paginate(params)
+        await Recipe.paginate(params)
     },
 
     async show(req, res) {
@@ -67,11 +67,11 @@ module.exports = {
         return res.render('site/recipe', { recipe })
     },
 
-    chefsList(req, res) {
-        Chef.all(function(chefs) {
+    async chefsList(req, res) {
+        let results = await Chef.all()
+        const chefs = results.rows
 
-            return res.render('site/chefs', { chefs })
-        })
-    },
+        return res.render('site/chefs', { chefs })
+    }
     
 }

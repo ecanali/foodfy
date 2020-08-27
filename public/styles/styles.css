@@ -804,22 +804,6 @@ form .item #photos-preview img {
     opacity: 1;
 }
 
-/* CHEF AVATAR UPLOAD */
-/* .avatar-button {
-    height: 37px;
-    width: 139px;
-    background-color: #6558C3;
-    color: #FFFFFF;
-    font-weight: bold;
-    font-size: 16px;
-    line-height: 19px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-} */
-
 .avatar-upload {
     position: relative;
     height: 37px;
@@ -834,6 +818,7 @@ form .item #photos-preview img {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    margin-top: 5px;
 }
 
 #photos-input.avatar-input {
@@ -850,4 +835,8 @@ form .item #photos-preview img {
     padding: 0;
 
     cursor: pointer;
+}
+
+.avatar-url {
+    color: #999999;
 }

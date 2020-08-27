@@ -1,105 +1,114 @@
 const db = require('../../config/db')
 const { date } = require('../lib/utils')
-
+const File = require('../models/File')
 
 module.exports = {
 
-    // O 'all' vai sumir qdo começar a incluir o Filtro e Paginação
-    // Acredito que não vale a pena se preocupar em modificar a Query pra BD
-    // agora pra trazer o Nome do Chef junto na página de Index, só depois 
-    all(callback) {
-
-        db.query(`
-            SELECT chefs.*, count(recipes) AS total_recipes
-            FROM chefs
-            LEFT JOIN recipes ON (recipes.chef_id = chefs.id)
-            GROUP BY chefs.id
-            ORDER BY name ASC`, function(err, results) {
-            if(err) throw `Database Error! ${err}`
-
-            callback(results.rows)
-        })
-
+    all() {
+        try {
+            return db.query(`
+                SELECT chefs.*, count(recipes) AS total_recipes
+                FROM chefs
+                LEFT JOIN recipes ON (recipes.chef_id = chefs.id)
+                GROUP BY chefs.id
+                ORDER BY name ASC`)
+        } catch (error) {
+            console.error(error)
+        }
     },
 
-    create(data, callback) {
-        
-        const query = `
-            INSERT INTO chefs (
-                name,
-                avatar_url,
-                created_at
-            ) VALUES ($1, $2, $3)
-            RETURNING id
-        `
-
-        const values = [
-            data.name,
-            data.avatar_url,
-            date(Date.now())
-        ]
-
-        db.query(query, values, function(err, results) {
-            if(err) throw `Database Error! ${err}`
-
-            callback(results.rows[0])
-        })
-
+    create(data, fileId) {
+        try {
+            const query = `
+                INSERT INTO chefs (
+                    name,
+                    file_id,
+                    created_at
+                ) VALUES ($1, $2, $3)
+                RETURNING id
+            `
+    
+            const values = [
+                data.name,
+                fileId,
+                date(Date.now())
+            ]
+    
+            return db.query(query, values)
+        } catch (error) {
+            console.error(error)
+        }
     },
 
-    find(id, callback) {
-        db.query(`
-            SELECT chefs.*, count(recipes) AS total_recipes
-            FROM chefs
-            LEFT JOIN recipes ON (recipes.chef_id = chefs.id)
-            WHERE chefs.id = $1
-            GROUP BY chefs.id`, [id], function(err, results) {
-            if(err) throw `Database Error! ${err}`
-
-            callback(results.rows[0])
-        })
+    find(id) {
+        try {
+            return db.query(`
+                SELECT chefs.*, count(recipes) AS total_recipes
+                FROM chefs
+                LEFT JOIN recipes ON (recipes.chef_id = chefs.id)
+                WHERE chefs.id = $1
+                GROUP BY chefs.id
+            `, [id])
+        } catch (error) {
+            console.error(error)
+        }
     },
    
-    chefRecipesList(id, callback) {
-        db.query(`SELECT id, chef_id, image, title FROM recipes WHERE chef_id = $1`, [id], function(err, results) {
-            if(err) throw 'Database error!'
-
-            callback(results.rows)
-        })
+    chefRecipesList(id) {
+        try {
+            return db.query(`
+                SELECT id, chef_id, title 
+                FROM recipes 
+                WHERE chef_id = $1
+            `, [id])
+        } catch (error) {
+            console.error(error)
+        }
     },
 
-    update(data, callback) {
-        const query = `
-            UPDATE chefs SET
-                name = ($1),
-                avatar_url = ($2)
-            WHERE id = $3
-        `
-
-        const values = [
-            data.name,
-            data.avatar_url,
-            data.id
-        ]
-        
-        db.query(query, values, function(err, results) {
-            if(err) throw `Database Error! ${err}`
-                
-            callback()
-        })
+    update(data, fileId) {
+        try {
+            const query = `
+                UPDATE chefs SET
+                    name = ($1),
+                    file_id = ($2)
+                WHERE id = $3
+            `
+    
+            const values = [
+                data.name,
+                fileId,
+                data.id
+            ]
+            
+            return db.query(query, values)
+        } catch (error) {
+            console.error(error)
+        }
     },
 
-    delete(id, callback) {
-        db.query(`
-            DELETE FROM chefs
-            WHERE id = $1
-        `,
-        [id],
-        function(err, results) {
-            if(err) throw `Database Error! ${err}`
+    async delete(ChefId, fileId) {
+        try {
+            db.query(`DELETE FROM chefs WHERE id = $1`, [ChefId])
+    
+            await File.removeDeletedAvatarDB(fileId)
+            
+            return
+        } catch (error) {
+            console.error(error)
+        }
+    },
 
-            return callback()
-        })
+    files(fileId) {
+        try {
+            return db.query(`
+                SELECT files.id, files.name, files.path
+                FROM files
+                WHERE files.id = $1
+            `, [fileId])
+        } catch (error) {
+            console.error(error)
+        }
     }
 
 }

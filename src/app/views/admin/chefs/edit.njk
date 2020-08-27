@@ -18,26 +18,28 @@
 
             {% include 'admin/chefs/fields.njk' %}
 
-            {# <input type="hidden" id="idIndex1" name="idIndex1" value=""> #}
-
             <input 
                 type="hidden" 
                 name="id" 
                 value="{{ chef.id }}"
             >
 
+            <input 
+                type="hidden" 
+                name="file_id" 
+                value="{{ files[0].id }}"
+            >
+
         </form>
         <form id="form-delete" action="/admin/chefs?_method=DELETE" method="POST">
-            {# <input type="hidden" id="idIndex2" name="idIndex2" value=""> #}
             <input type="hidden" name="id" value="{{ chef.id }}">
             <input type="hidden" name="totalRecipes" value="{{ chef.total_recipes }}">
+            <input type="hidden" name="file_id" value="{{ files[0].id }}">
 
             <button class="admin-button-2" type="submit">Deletar</button>
         </form>
     </main>
 
     {% include '../confirm.njk' %}
-
-    {# <script src="/scripts/admin-scripts.js"></script> #}
 
 {% endblock content %}
