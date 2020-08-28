@@ -33,7 +33,7 @@
                 {% for recipe in recipes %}
 
                 <div class="receita-admin" id="{{ recipe.title }}">
-                    <img src="{{ recipe.image }}" alt="{{ recipe.title }}">
+                    <img src="{{ recipe.img.src }}" alt="{{ recipe.title }}">
                     <div class="texto-receita-admin">
                         <h3>{{ recipe.title }}</h3>
                         <p>por {{ chef.name }}</p>

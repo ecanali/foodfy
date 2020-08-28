@@ -1,13 +1,39 @@
 const Chef = require('../models/Chef')
+const Recipe = require('../models/Recipe')
 const File = require('../models/File')
 
 module.exports = {
 
     async index(req, res) {
-        let results = await Chef.all()
-        const chefs = results.rows
+        try {
+            let results = await Chef.all()
+            const chefs = results.rows
+    
+            if (!chefs) res.send('Chefs not found')
 
-        return res.render('admin/chefs/index', { chefs })
+            async function getImage(chefId) {
+                let results = await Chef.filesByChefId(chefId)
+                const files = results.rows.map(chef => ({
+                    ...chef,
+                    src:`${req.protocol}://${req.headers.host}${chef.path.replace("public", "")}`
+                    }))
+                    
+                return files[0]
+            }
+
+            const chefsPromise = chefs.map(async chef => {
+                chef.img = await getImage(chef.id)
+
+                return chef
+            })
+    
+            const lastAdded = await Promise.all(chefsPromise)
+    
+            return res.render('admin/chefs/index', { chefs: lastAdded })
+            
+        } catch (error) {
+            console.error(error)
+        }
     },
 
     create(req, res) {
@@ -55,8 +81,27 @@ module.exports = {
 
         results = await Chef.chefRecipesList(req.params.id)
         const recipes = results.rows
+       
+        // Pegar imagens das receitas de cada chef
+        async function getImage(recipeId) {
+            let results = await Recipe.files(recipeId)
+            const files = results.rows.map(recipe => ({
+                ...recipe,
+                src:`${req.protocol}://${req.headers.host}${recipe.path.replace("public", "")}`
+                }))
+                
+            return files[0]
+        }
 
-        return res.render('admin/chefs/chef', { recipes, chef, files })
+        const recipesPromise = recipes.map(async recipe => {
+            recipe.img = await getImage(recipe.id)
+
+            return recipe
+        })
+
+        const recipeImages = await Promise.all(recipesPromise)
+
+        return res.render('admin/chefs/chef', { recipes: recipeImages, chef, files })
     },
 
     async edit(req, res) {        

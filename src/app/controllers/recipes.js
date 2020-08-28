@@ -4,10 +4,35 @@ const File = require('../models/File')
 module.exports = {
 
     async index(req, res) {
-        let results = await Recipe.all()
-        const recipes = results.rows
-        
-        return res.render('admin/recipes/index', { recipes })
+        try {
+            let results = await Recipe.all()
+            const recipes = results.rows
+
+            if (!recipes) res.send('Recipes not found')
+
+            async function getImage(recipeId) {
+                let results = await Recipe.files(recipeId)
+                const files = results.rows.map(recipe => ({
+                    ...recipe,
+                    src:`${req.protocol}://${req.headers.host}${recipe.path.replace("public", "")}`
+                    }))
+                    
+                return files[0]
+            }
+
+            const recipesPromise = recipes.map(async recipe => {
+                recipe.img = await getImage(recipe.id)
+
+                return recipe
+            })
+    
+            const lastAdded = await Promise.all(recipesPromise)
+            
+            return res.render('admin/recipes/index', { recipes: lastAdded })
+            
+        } catch (error) {
+            console.error(error)
+        }
     },
 
     async create(req, res) {
