@@ -1,0 +1,17 @@
+{% extends 'site/layout.njk' %}
+
+{% block head %}
+    <title>Receitas</title>
+{% endblock head %}
+
+{% block content %}
+    
+
+    <main class="recipes">
+        <div>
+            <h2 class="h2-site">A busca por "{{ filter }}" retornou 0 resultados. Por favor, tente outro termo.</h2>
+        </div>
+        <div class="pagination" data-filter={{ filter }}></div>
+    </main>
+
+{% endblock content %}

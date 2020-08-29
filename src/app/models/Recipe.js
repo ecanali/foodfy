@@ -153,14 +153,19 @@ module.exports = {
             FROM recipes
             LEFT JOIN chefs ON (recipes.chef_id = chefs.id)
             ${filterQuery}
-            GROUP BY recipes.id, chefs.name LIMIT $1 OFFSET $2
-            `
-    
+            ORDER BY updated_at DESC LIMIT $1 OFFSET $2
+            `    
             db.query(query, [limit, offset], function(err, results) {
-                if (err) throw 'Database error!'
-    
-                callback(results.rows)
+                if (err) throw `Database error! ${err}`
+                
+                if (results.rowCount == 0) {
+                    let notFound = "404"    
+                    callback(notFound)
+                } else {
+                    callback(results.rows)
+                }
             })
+
         } catch (error) {
             console.error(error)
         }

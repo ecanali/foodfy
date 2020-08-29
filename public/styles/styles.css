@@ -331,6 +331,8 @@ h2.h2-site {
 main img {
     border-radius: 15px;
     margin-bottom: 30px;
+    max-width: 940px;
+    max-height: 280px;
 }
 
 .detail-img {

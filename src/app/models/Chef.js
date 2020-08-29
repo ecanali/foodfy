@@ -60,6 +60,7 @@ module.exports = {
                 SELECT id, chef_id, title 
                 FROM recipes 
                 WHERE chef_id = $1
+                ORDER BY created_at DESC
             `, [id])
         } catch (error) {
             console.error(error)
