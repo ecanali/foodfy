@@ -11,10 +11,10 @@ for (let item of menuItems) {
 // Adiciona campos extras em Ingredientes
 function addIngredient() {
     const ingredients = document.querySelector('#ingredients')
-    const fieldCointainer = document.querySelectorAll('.ingredient')
+    const fieldContainer = document.querySelectorAll('.ingredient')
 
     // Clone do último ingrediente adicionado
-    const newField = fieldCointainer[fieldCointainer.length - 1].cloneNode(true)
+    const newField = fieldContainer[fieldContainer.length - 1].cloneNode(true)
 
     // Não add novo input se último estiver vazio
     if (newField.children[0].value == "") return false
@@ -34,10 +34,10 @@ const addIngredientButton = document.querySelector('.add-ingredient')
 // Adiciona campos extras em Modo de Preparo
 function addStep() {
     const steps = document.querySelector('#steps')
-    const fieldCointainer = document.querySelectorAll('.step')
+    const fieldContainer = document.querySelectorAll('.step')
 
     // Clone do último ingrediente adicionado
-    const newField = fieldCointainer[fieldCointainer.length - 1].cloneNode(true)
+    const newField = fieldContainer[fieldContainer.length - 1].cloneNode(true)
 
     // Não add novo input se último estiver vazio
     if (newField.children[0].value == "") return false
@@ -116,7 +116,7 @@ const PhotosUpload = {
         return false
     },
     getAllFiles() {
-        // ClipboardEvent é para o Firefix, DataTransfer é para o Chrome
+        // ClipboardEvent é para o Firefox, DataTransfer é para o Chrome
         const dataTransfer = new ClipboardEvent("").clipboardData || new DataTransfer()
 
         PhotosUpload.files.forEach(file => dataTransfer.items.add(file))

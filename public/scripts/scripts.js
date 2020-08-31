@@ -65,7 +65,7 @@ function createPagination(pagination) {
     const filter = pagination.dataset.filter
 
     // Info pode vir como string do HTML o "+" na frente transforma em Number
-    // É importante garantir isso pra não dar problema nos cálulos depois
+    // É importante garantir isso pra não dar problema nos cálculos depois
     const page = +pagination.dataset.page
     const total = +pagination.dataset.total
 
