@@ -2,9 +2,15 @@ const express = require('express')
 const nunjucks = require('nunjucks')
 const routes = require('./routes')
 const methodOverride = require('method-override')
+const session = require('./config/session')
 
 const server = express()
 
+server.use(session)
+server.use((req, res, next) => {
+    res.locals.session = req.session
+    next()
+}) // deixa disponível de forma global (com acesso a todas as páginas) a variável de "session"
 server.use(express.urlencoded({ extended: true }))
 server.use(express.static('public'))
 server.use(methodOverride('_method'))
@@ -22,6 +28,6 @@ server.use(function(req, res) {
     res.status(404).render('site/not-found')
 })
 
-server.listen(3000, function() {
+server.listen(3007, function() {
     console.log('server is running...')
 })
