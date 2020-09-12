@@ -4,23 +4,25 @@ const { hash } = require('bcryptjs')
 const fs = require('fs') // FileSystem = files/images in public file
 
 module.exports = {
-    async findOne(filters) {
-        let query = "SELECT * FROM users"
+    all() {
+        try {
+            return db.query(`
+                SELECT * FROM users
+                ORDER BY created_at DESC`)
+        } catch (error) {
+            console.error(error)
+        }
+    },
 
-        Object.keys(filters).map(key => {
-            // WHERE | OR | AND
-            query = `${query}
-            ${key}
-            `
-
-            Object.keys(filters[key]).map(field => {
-                query = `${query} ${field} = '${filters[key][field]}'`
-            })
-        })
-
-        const results = await db.query(query)
-
-        return results.rows[0]
+    find(id) {
+        try {
+            return db.query(`
+                SELECT * FROM users
+                WHERE id = $1
+            `, [id])
+        } catch (error) {
+            console.error(error)
+        }
     },
 
     async create(data) {
@@ -40,7 +42,7 @@ module.exports = {
             const values = [
                 data.name,
                 data.email,
-                data.isAdmin
+                data.isAdmin || 0
             ]
     
             const results = await db.query(query, values)
@@ -74,28 +76,28 @@ module.exports = {
     },
 
     async delete(id) {
-        // gets all products from user
-        let results = await db.query('SELECT * FROM products WHERE user_id = $1', [id])
-        const products = results.rows
+        // // gets all products from user
+        // let results = await db.query('SELECT * FROM products WHERE user_id = $1', [id])
+        // const products = results.rows
 
-        // from products, gets all imagens
-        const allFilesPromise = products.map(product =>
-            Product.files(product.id))
+        // // from products, gets all imagens
+        // const allFilesPromise = products.map(product =>
+        //     Product.files(product.id))
         
-        let promiseResults = await Promise.all(allFilesPromise)
+        // let promiseResults = await Promise.all(allFilesPromise)
 
         // runs user deletion
         await db.query('DELETE FROM users WHERE id = $1', [id])
 
-        // removes images from public
-        promiseResults.map(results => {
-            results.rows.map(file => {
-                try {
-                    fs.unlinkSync(file.path)
-                } catch (error) {
-                    console.error(error)
-                }
-            }) 
-        })
+        // // removes images from public
+        // promiseResults.map(results => {
+        //     results.rows.map(file => {
+        //         try {
+        //             fs.unlinkSync(file.path)
+        //         } catch (error) {
+        //             console.error(error)
+        //         }
+        //     }) 
+        // })
     }
 }

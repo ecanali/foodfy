@@ -2,8 +2,32 @@ const User = require('../models/User')
 // const { formatCpfCnpj, formatCep } = require('../../lib/utils')
 
 module.exports = {
+    async list(req, res) {
+        try {
+            let results = await User.all()
+            const users = results.rows
+    
+            if (!users) res.send('Users not found')
+        
+            return res.render('admin/users/list', { users })
+            
+        } catch (error) {
+            console.error(error)
+        }
+    },
+
     create(req, res) {
         return res.render('admin/users/create')
+    },
+
+    async edit(req, res) {    
+        let results = await User.find(req.params.id)
+        const user = results.rows[0]
+
+        if (!user) return res.send('User not found!')
+
+        console.log(user)
+        return res.render('admin/users/edit', { user })
     },
 
     async show(req, res) {
@@ -16,7 +40,7 @@ module.exports = {
     },
 
     async post(req, res) {
-        return res.send(req.body)
+        // return res.send(req.body)
 
         const userId = await User.create(req.body)
         
@@ -26,31 +50,31 @@ module.exports = {
         // return res.redirect('/admin/users')
     },
 
-    async update(req, res) {
+    async put(req, res) {
         try {
-            const { user } = req
-            let { name, email, cpf_cnpj, cep, address } = req.body
-
-            cpf_cnpj = cpf_cnpj.replace(/\D/g, "")
-            cep = cep.replace(/\D/g, "")
-
-            await User.update(user.id, {
+            let { name, email, isAdmin } = req.body
+    
+            await User.update(req.body.id, {
                 name,
                 email,
-                cpf_cnpj,
-                cep,
-                address
+                is_admin: isAdmin || 0
             })
 
-            return res.render('user/index', {
+            let results = await User.all()
+            const users = results.rows
+
+            if (!users) res.send('Users not found')
+
+            return res.render('admin/users/list', {
                 user: req.body,
-                success: "Conta atualizada com sucesso!"
+                success: "Conta atualizada com sucesso!",
+                users
             })
 
         } catch (error) {
             console.error(error)
 
-            return res.render('user/index', {
+            return res.render('admin/users/list', {
                 error: "Algum erro aconteceu!"
             })
         }
@@ -60,18 +84,24 @@ module.exports = {
         try {
             await User.delete(req.body.id)
 
-            req.session.destroy()
+            // req.session.destroy()
 
-            return res.render('session/login', {
-                success: "Conta deletada com sucesso!"
+            let results = await User.all()
+            const users = results.rows
+
+            if (!users) res.send('Users not found')
+
+            return res.render('admin/users/list', {
+                success: "Usuário deletado com sucesso!",
+                users
             })
 
         } catch(err) {
             console.error(err)
 
-            return res.render('user/index', {
+            return res.render('admin/users/list', {
                 user: req.body,
-                error: "Erro ao tentar excluir sua conta!"
+                error: "Erro ao tentar excluir o usuário!"
             })
         }
     }

@@ -1,15 +1,15 @@
 {% extends '../layout.njk' %}
 
 {% block head %}
-    <title>Foodfy - Admin: Novo usuário</title>
+    <title>Foodfy - Admin: Editar usuário</title>
 {% endblock head %}
 
 {% block content %}
     <main>
-        <form action="/admin/users" method="POST">
+        <form action="/admin/users?_method=PUT" method="POST">
         
             <div class="recipe-header-admin">
-                <h2>Criar Usuário</h2>
+                <h2>Atualizar Usuário</h2>
                 
                 <div class="admin-buttons">
                     <button class="admin-button-1" type="submit">Salvar</button>
@@ -25,11 +25,27 @@
                     type="checkbox"
                     name="isAdmin"
                     value="1"
+                    {% if user.is_admin == true %}
+                        checked
+                    {% endif %}
                 >
             <h4>Administrador</h4>
             </div>
 
+            <input 
+                type="hidden" 
+                name="id" 
+                value="{{ user.id }}"
+            >
+
         </form>
-        <a class="cancel-button" href="/admin/users">Cancelar</a>
+
+        <form id="form-delete" action="/admin/users?_method=DELETE" method="POST">
+            <input type="hidden" name="id" value="{{ user.id }}">
+            <button class="admin-button-2" type="submit">Deletar</button>
+        </form>
+
+        {% include '../confirm.njk' %}
+        
     </main>
 {% endblock content %}
