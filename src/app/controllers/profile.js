@@ -1,6 +1,4 @@
-const User = require('../models/User')
-const crypto = require('crypto')
-const mailer = require('../../lib/mailer')
+const Profile = require('../models/Profile')
 
 module.exports = {
     async list(req, res) {
@@ -30,36 +28,21 @@ module.exports = {
         return res.render('admin/users/edit', { user })
     },
 
-    async show(req, res) {
+    async index(req, res) {
         const { user } = req
 
-        user.cpf_cnpj = formatCpfCnpj(user.cpf_cnpj)
-        user.cep = formatCep(user.cep)
-
-        return res.render('user/index', { user })
+        return res.render('admin/profile/index', { user })
     },
 
     async post(req, res) {
-        const { email } = req.body
+        // return res.send(req.body)
 
-        // create 
-        const passwordToken = crypto.randomBytes(4).toString("hex")
-
-        // send email (by "nodemailer") with auto generated password-token
-        await mailer.sendMail({
-            to: email,
-            from: 'no-reply@foodfy.com.br',
-            subject: "Sua senha | Foodfy",
-            html: `<h2>Segue abaixo sua senha automática, por favor altere assim que possível.</h2>
-                <p>${passwordToken}</p>
-            `
-        })
-
-        const userId = await User.create(req.body, passwordToken)
+        const userId = await User.create(req.body)
         
         req.session.userId = userId
 
-        return res.redirect('/admin/users')
+        return res.redirect('/admin/users/create') // por enquanto, depois direcionar pra lista \/
+        // return res.redirect('/admin/users')
     },
 
     async put(req, res) {

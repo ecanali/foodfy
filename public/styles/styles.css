@@ -928,3 +928,31 @@ form .item #photos-preview img {
     display: inline-block;
     margin-top: 16px;
 }
+
+/* LOGIN */
+.login-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    margin-top: 35px;
+}
+
+.login-logo {
+    margin-bottom: 146px;
+}
+
+.login-form {
+    max-width: 500px;
+    min-width: 500px;
+}
+
+.login-form .recipe-header-admin h4 {
+    max-width: 500px;
+    min-width: 500px;
+
+}
+
+.login-fields {
+    max-width: 500px;
+}

@@ -24,25 +24,23 @@ module.exports = {
         }
     },
 
-    async create(data, passwordToken) {
+    async create(data) {
         try {
             const query = `
                 INSERT INTO users (
                     name,
                     email,
-                    password,
                     is_admin
-                ) VALUES ($1, $2, $3, $4)
+                ) VALUES ($1, $2, $3)
                 RETURNING id
             `
     
             // hash of password (using 'bcryptjs' lib)
-            const passwordHash = await hash(passwordToken, 8)
+            // const passwordHash = await hash(data.password, 8)
     
             const values = [
                 data.name,
                 data.email,
-                passwordHash,
                 data.isAdmin || 0
             ]
     

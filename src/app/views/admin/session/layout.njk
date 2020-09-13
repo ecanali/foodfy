@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="/styles/styles.css">
+        
+        {% block head %}
+            <title>Foodfy - Login</title>
+        {% endblock head %}
+        
+    </head>
+    <body>
+        
+        <div class="login-content">
+
+            <div class="login-logo">
+                <a href="/"><img src="/assets/logo.png" alt="logo-foodfy"></a>
+            </div>
+
+            {% block content %}
+            {% endblock content %}
+
+        </div>
+
+        <script src="/scripts/admin-scripts.js"></script>
+
+    </body>
+</html>

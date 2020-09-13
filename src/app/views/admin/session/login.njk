@@ -1,0 +1,31 @@
+{% extends './layout.njk' %}
+
+{% block head %}
+    <title>Foodfy - Login</title>
+{% endblock head %}
+
+{% block content %}
+    <main>
+        <form action="/admin/users/login" method="POST" class="login-form">
+        
+            <div class="recipe-header-admin">
+                <h2>Iniciar Sessão</h2>
+            </div>
+
+            <div class="login-fields">
+                {% include 'admin/session/fields.njk' %}
+            </div>
+
+                <div class="admin-buttons">
+                    <button class="admin-button-1" type="submit">Acessar</button>
+                </div>
+
+            <input 
+                type="hidden" 
+                name="id" 
+                value="{{ user.id }}"
+            >
+
+        </form>        
+    </main>
+{% endblock content %}

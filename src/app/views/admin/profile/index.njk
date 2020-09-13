@@ -1,0 +1,43 @@
+{% extends '../layout.njk' %}
+
+{% block head %}
+    <title>Foodfy - Admin: Dados usuário</title>
+{% endblock head %}
+
+{% block content %}
+    <main>
+        <form action="/admin/profile?_method=PUT" method="POST">
+        
+            <div class="recipe-header-admin">
+                <h2>Bem-vindo {{ user.name }}!</h2>
+                
+                <div class="admin-buttons">
+                    <button class="admin-button-1" type="submit">Salvar</button>
+                </div>
+            </div>
+
+            <div class="user-fields">
+                {% include 'admin/profile/fields.njk' %}
+
+                <div class="item">
+                    <h4>Senha</h4>
+                    <div>
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="Digite a senha" 
+                            required
+                        >
+                    </div>
+                </div>
+            </div>
+
+            <input 
+                type="hidden" 
+                name="id" 
+                value="{{ user.id }}"
+            >
+
+        </form>        
+    </main>
+{% endblock content %}

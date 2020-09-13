@@ -1,0 +1,26 @@
+<div class="item">
+    <h4>Nome</h4>
+    <div>
+        <input
+            type="text"
+            name="name"
+            value="{{ user.name }}"
+            placeholder="Digite o nome completo" 
+            required
+        >
+    </div>
+</div>
+
+<div class="item">
+    <h4>Email</h4>
+    <div>
+        <input
+            type="text"
+            name="email"
+            value="{{ user.email }}"
+            placeholder="Digite o email" 
+            onblur="Validate.apply(this, 'isEmail')"
+            required
+        >
+    </div>
+</div>

@@ -6,10 +6,12 @@ const site = require('../app/controllers/site')
 const adminRecipes = require('./admin-recipes')
 const adminChefs = require('./admin-chefs')
 const users = require('./users')
+const profile = require('./profile')
 
 routes.use('/admin/recipes', adminRecipes)
 routes.use('/admin/chefs', adminChefs)
 routes.use('/admin/users', users)
+routes.use('/admin/profile', profile)
 
 // Site - Home = Client
 routes.get('/', site.index)

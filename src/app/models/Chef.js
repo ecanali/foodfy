@@ -1,5 +1,5 @@
 const db = require('../../config/db')
-const { date } = require('../lib/utils')
+const { date } = require('../../lib/utils')
 const File = require('../models/File')
 
 module.exports = {
