@@ -4,6 +4,11 @@ const routes = express.Router()
 const UserController = require('../app/controllers/user')
 const SessionController = require('../app/controllers/session')
 
+// const UserValidator = require('../app/validators/user')
+const SessionValidator = require('../app/validators/session')
+
+// const { isLoggedRedirectToUsers, onlyUsers } = require('../app/middlewares/session')
+
 // Rotas que o administrador irá acessar para gerenciar usuários
 routes.get('/', UserController.list) //Mostrar a lista de usuários cadastrados
 routes.get('/create', UserController.create) // Página de cadastrar um usuário
@@ -15,9 +20,10 @@ routes.delete('/', UserController.delete) // Deletar um usuário
 
 //// Rotas de controle de sessão
 // login / logout
+// routes.get('/login', isLoggedRedirectToUsers, SessionController.loginForm) // Versão final com validador
 routes.get('/login', SessionController.loginForm)
-// routes.post('/login', SessionValidator.login, SessionController.login)
-// routes.post('/logout', SessionController.logout)
+routes.post('/login', SessionValidator.login, SessionController.login)
+routes.post('/logout', SessionController.logout)
 
 // // reset password / forgot
 // routes.get('/forgot-password', SessionController.forgotForm)

@@ -12,13 +12,15 @@
                 <h2>Iniciar Sessão</h2>
             </div>
 
+            {% include 'admin/session/fields.njk' %}
+            
             <div class="login-fields">
-                {% include 'admin/session/fields.njk' %}
-            </div>
+                <a href="#">Perdeu a senha?</a>
 
                 <div class="admin-buttons">
                     <button class="admin-button-1" type="submit">Acessar</button>
                 </div>
+            </div>
 
             <input 
                 type="hidden" 

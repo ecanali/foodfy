@@ -86,7 +86,7 @@ header nav a {
 }
 
 /* FILTER */
-header nav form {
+.home-filter {
     min-width: 345px;
     display: grid;
     grid-template-columns: 1fr 90px;
@@ -95,7 +95,7 @@ header nav form {
     margin-left: 74px;
 }
 
-header nav form input {
+.home-filter input {
     color: #999999;
     border: 1px solid #DDDDDD;
     padding: 10px 15px;
@@ -105,7 +105,7 @@ header nav form input {
     box-sizing: border-box;
 }
 
-header nav form button {
+.home-filter button {
     background: #6558C3;
     cursor: pointer;
     color: #FFFFFF;
@@ -417,6 +417,7 @@ header.nav-admin {
 
 nav.nav-admin {
     min-width: 940px;
+    position: relative;
 }
 
 .header-index {
@@ -511,7 +512,7 @@ h2.h2-admin {
 
 /* ADMIN RECIPE PAGE */
 .recipe-header-admin {
-    width: 940px;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -939,20 +940,85 @@ form .item #photos-preview img {
 }
 
 .login-logo {
-    margin-bottom: 146px;
+    margin-bottom: 100px;
 }
 
 .login-form {
     max-width: 500px;
     min-width: 500px;
+
+    display: flex;
+    flex-direction: column;
 }
 
-.login-form .recipe-header-admin h4 {
-    max-width: 500px;
-    min-width: 500px;
-
+.login-form .recipe-header-admin {
+    justify-content: center;
 }
 
 .login-fields {
-    max-width: 500px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-top: 30px;
+}
+
+.login-fields a {
+    color: #969696;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.login-fields a:hover {
+    color: var(--titles-color);
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.logout-form {
+    min-width: 35px;
+    position: absolute;
+    right: 0;
+}
+
+.logout-form .logout-button {
+    font-weight: bold;
+    font-size: 15px;
+    line-height: 18px;
+    color: #FFFFFF;
+
+    background: none;
+    padding: 0;
+    appearance: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* MESSAGES */
+@keyframes hide-message {
+    to {
+        top: -50px;
+        opacity: 0;
+    }
+}
+
+.messages {
+    display: flex;
+    justify-content: center;
+    padding: 16px;
+    position: absolute;
+    width: 100%;
+    color: white;
+    top: 0;
+    opacity: 1;
+
+    animation: hide-message 400ms 5s ease-out forwards;
+}
+
+.messages.error {
+    background: #e74c3c;
+}
+
+.messages.success {
+    background: rgb(122, 182, 30);
 }
