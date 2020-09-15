@@ -895,10 +895,10 @@ form .item #photos-preview img {
 
 /* USERS ADMIN */
 .error {
-    background-color: #e74c3c;
+    background-color: #DC4747;
     padding: 4px;
     border-radius: 4px;
-    color: white;
+    color: #FFF;
 }
 
 .grid-users-admin {
@@ -1005,20 +1005,32 @@ form .item #photos-preview img {
 .messages {
     display: flex;
     justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    border: 1px solid #DDDDDD;
+
+    width: 344px;
+    height: 135px;
+    
     padding: 16px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #FFF;
+    
     position: absolute;
-    width: 100%;
-    color: white;
-    top: 0;
+    top: 15px;
+    right: 15px;
+
     opacity: 1;
 
     animation: hide-message 400ms 5s ease-out forwards;
 }
 
 .messages.error {
-    background: #e74c3c;
+    background: #DC4747;
 }
 
 .messages.success {
-    background: rgb(122, 182, 30);
+    background: #01B12A;
 }
