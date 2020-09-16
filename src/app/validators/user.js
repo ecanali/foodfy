@@ -29,36 +29,39 @@ async function show(req, res, next) {
     next()
 }
 
+async function isAdmin(req, res, next) {
+    const { userId: id } = req.session
+
+    const user = await User.findOne({ where: {id} })
+
+    if (!user || user.is_admin == false) return res.render('admin/session/login', {
+        error: "Usuário não encontrado/permitido."
+    })
+
+    req.user = user
+
+    next()
+}
+
 async function post(req, res, next) {
     // check if it has all fields
     const fillAllFields = checkAllFields(req.body)
 
     if (fillAllFields) {
-        return res.render('user/register', fillAllFields)
+        return res.render('admin/users/create', fillAllFields)
     }
 
-    // check if user exists [email, cpf_cnpj uniques]
-    let { email, cpf_cnpj, password, passwordRepeat } = req.body
-
-    cpf_cnpj = cpf_cnpj.replace(/\D/g, "")
+    // check if user exists [email unique]
+    let { email} = req.body
 
     const user = await User.findOne({
-        where: { email },
-        or: { cpf_cnpj }
+        where: { email }
     })
 
-    if (user) return res.render('user/register', {
+    if (user) return res.render('admin/users/create', {
         user: req.body,
         error: "Usuário já cadastrado."
     })
-
-    // check if password match
-    if (password != passwordRepeat) {
-        return res.render('user/register', {
-            user: req.body,
-            error: "A senha e/ou repetição da senha estão incorretas."
-        })
-    }
 
     next()
 }
@@ -68,12 +71,12 @@ async function update(req, res, next) {
     const fillAllFields = checkAllFields(req.body)
 
     if (fillAllFields) {
-        return res.render('user/index', fillAllFields)
+        return res.render('admin/profile', fillAllFields)
     }
 
     const { id, password } = req.body
 
-    if (!password) return res.render('user/index', {
+    if (!password) return res.render('admin/profile/index', {
         user: req.body,
         error: "Coloque sua senha para atualizar seu cadastro."
     })
@@ -82,7 +85,7 @@ async function update(req, res, next) {
 
     const passed = await compare(password, user.password)
 
-    if (!passed) return res.render("user/index", {
+    if (!passed) return res.render("admin/profile/index", {
         user: req.body,
         error: "Senha incorreta."
     })
@@ -95,5 +98,6 @@ async function update(req, res, next) {
 module.exports = {
     post,
     show,
-    update
+    update,
+    isAdmin
 }

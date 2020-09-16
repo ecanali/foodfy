@@ -21,7 +21,9 @@
                 <a href="/"><img src="/assets/logo-white.png" alt="logo-foodfy-white"></a>
                 <a href="/admin/recipes">RECEITAS</a>
                 <a href="/admin/chefs">CHEFS</a>
-                <a href="/admin/users">USUÁRIOS</a>
+                {% if user.is_admin == true %}
+                    <a href="/admin/users">USUÁRIOS</a>
+                {% endif %}
 
                 <form action="/admin/users/logout" method="post" class="logout-form">
                     <button class="logout-button" type="submit">SAIR</button>

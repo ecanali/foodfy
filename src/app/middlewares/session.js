@@ -1,7 +1,15 @@
-function onlyUsers(req, res, next) {
+const User = require('../models/User')
+
+async function onlyUsers(req, res, next) {
     if (!req.session.userId)
-        return res.redirect('/users/login')
+        return res.redirect('/admin/users/login')
     
+    const { userId: id } = req.session
+
+    const user = await User.findOne({ where: {id} })
+
+    req.user = user
+
     next()
 }
 

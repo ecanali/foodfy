@@ -1023,6 +1023,8 @@ form .item #photos-preview img {
     right: 15px;
 
     opacity: 1;
+    
+    z-index: 1;
 
     animation: hide-message 400ms 5s ease-out forwards;
 }

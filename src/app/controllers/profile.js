@@ -1,4 +1,6 @@
 const Profile = require('../models/Profile')
+const User = require('../models/User')
+
 
 module.exports = {
     async list(req, res) {
@@ -47,29 +49,26 @@ module.exports = {
 
     async put(req, res) {
         try {
-            let { name, email, isAdmin } = req.body
+            let { name, email, id } = req.body
     
-            await User.update(req.body.id, {
+            await User.update(id, {
                 name,
                 email,
-                is_admin: isAdmin || 0
             })
 
-            let results = await User.all()
-            const users = results.rows
+            const user = await User.findOne({ where: {id} })
 
-            if (!users) res.send('Users not found')
+            if (!user) res.send('User not found')
 
-            return res.render('admin/users/list', {
-                user: req.body,
+            return res.render('admin/profile/index', {
+                user,
                 success: "Conta atualizada com sucesso!",
-                users
             })
 
         } catch (error) {
             console.error(error)
 
-            return res.render('admin/users/list', {
+            return res.render('admin/profile/index', {
                 error: "Algum erro aconteceu!"
             })
         }

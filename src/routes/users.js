@@ -4,16 +4,16 @@ const routes = express.Router()
 const UserController = require('../app/controllers/user')
 const SessionController = require('../app/controllers/session')
 
-// const UserValidator = require('../app/validators/user')
+const UserValidator = require('../app/validators/user')
 const SessionValidator = require('../app/validators/session')
 
 const { isLoggedRedirectToUsers, onlyUsers } = require('../app/middlewares/session')
 
 // Rotas que o administrador irá acessar para gerenciar usuários
-routes.get('/', UserController.list) //Mostrar a lista de usuários cadastrados
-routes.get('/create', UserController.create) // Página de cadastrar um usuário
-routes.post('/', UserController.post) // Cadastra um usuário
-routes.get('/:id/edit', UserController.edit) // Página de editar um usuário
+routes.get('/', onlyUsers, UserValidator.isAdmin, UserController.list) //Mostrar a lista de usuários cadastrados
+routes.get('/create', onlyUsers, UserController.create) // Página de cadastrar um usuário
+routes.post('/', UserValidator.post, UserController.post) // Cadastra um usuário
+routes.get('/:id/edit', onlyUsers, UserController.edit) // Página de editar um usuário
 
 routes.put('/', UserController.put) // Editar um usuário
 routes.delete('/', UserController.delete) // Deletar um usuário

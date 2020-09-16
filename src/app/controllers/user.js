@@ -57,7 +57,7 @@ module.exports = {
 
         const userId = await User.create(req.body, passwordToken)
         
-        req.session.userId = userId
+        // req.session.userId = userId
 
         return res.redirect('/admin/users')
     },
