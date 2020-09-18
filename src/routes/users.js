@@ -9,14 +9,14 @@ const SessionValidator = require('../app/validators/session')
 
 const { isLoggedRedirectToUsers, onlyUsers } = require('../app/middlewares/session')
 
-// Rotas que o administrador irá acessar para gerenciar usuários
+// Rotas que o administrador irá acessar para gerenciar usuários - OK
 routes.get('/', onlyUsers, UserValidator.isAdmin, UserController.list) //Mostrar a lista de usuários cadastrados
-routes.get('/create', onlyUsers, UserController.create) // Página de cadastrar um usuário
-routes.post('/', UserValidator.post, UserController.post) // Cadastra um usuário
-routes.get('/:id/edit', onlyUsers, UserController.edit) // Página de editar um usuário
+routes.get('/create', onlyUsers, UserValidator.isAdmin, UserController.create) // Página de cadastrar um usuário
+routes.post('/', onlyUsers, UserValidator.isAdmin, UserValidator.post, UserController.post) // Cadastra um usuário
+routes.get('/:id/edit', onlyUsers, UserValidator.isAdmin, UserController.edit) // Página de editar um usuário
 
-routes.put('/', UserController.put) // Editar um usuário
-routes.delete('/', UserController.delete) // Deletar um usuário
+routes.put('/', onlyUsers, UserValidator.isAdmin, UserController.put) // Editar um usuário
+routes.delete('/', onlyUsers, UserValidator.isAdmin, UserController.delete) // Deletar um usuário
 
 // login / logout OK
 routes.get('/login', isLoggedRedirectToUsers, SessionController.loginForm)

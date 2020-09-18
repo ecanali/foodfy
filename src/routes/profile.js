@@ -7,7 +7,7 @@ const { onlyUsers } = require('../app/middlewares/session')
 
 const UserValidator = require('../app/validators/user')
 
-// Rotas de perfil de um usuário logado
+// Rotas de perfil de um usuário logado - OK
 routes.get('/', onlyUsers, ProfileController.index) // Mostrar o formulário com dados do usuário logado
 routes.put('/', UserValidator.update, ProfileController.put)// Editar o usuário logado
 

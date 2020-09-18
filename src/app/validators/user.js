@@ -9,30 +9,19 @@ function checkAllFields(body) {
         if (body[key] == "") {
             return {
                 user: body,
-                error: "Por favor, preencha todos os campos."
+                error: "Por favor, preencha todos os campos.",
+                userSession
             }
         }
     }
 }
 
-async function show(req, res, next) {
-    const { userId: id } = req.session
-
-    const user = await User.findOne({ where: {id} })
-
-    if (!user) return res.render('user/register', {
-        error: "Usuário não encontrado!"
-    })
-
-    req.user = user
-
-    next()
-}
-
 async function isAdmin(req, res, next) {
-    const { userId: id } = req.session
+    // const { userId: id } = req.session
 
-    const user = await User.findOne({ where: {id} })
+    // const user = await User.findOne({ where: {id} })
+
+    const user = req.user
 
     if (!user || user.is_admin == false) return res.render('admin/session/login', {
         error: "Usuário não encontrado/permitido."
@@ -44,6 +33,8 @@ async function isAdmin(req, res, next) {
 }
 
 async function post(req, res, next) {
+    const { user: userSession } = req
+    
     // check if it has all fields
     const fillAllFields = checkAllFields(req.body)
 
@@ -60,8 +51,11 @@ async function post(req, res, next) {
 
     if (user) return res.render('admin/users/create', {
         user: req.body,
-        error: "Usuário já cadastrado."
+        error: "Usuário já cadastrado.",
+        userSession
     })
+
+    req.user = userSession
 
     next()
 }
@@ -97,7 +91,6 @@ async function update(req, res, next) {
 
 module.exports = {
     post,
-    show,
     update,
     isAdmin
 }

@@ -1,16 +1,18 @@
 const User = require('../models/User')
 const crypto = require('crypto')
 const mailer = require('../../lib/mailer')
+const user = require('../validators/user')
 
 module.exports = {
     async list(req, res) {
         try {
+            const { user: userSession } = req
             let results = await User.all()
             const users = results.rows
     
             if (!users) res.send('Users not found')
-        
-            return res.render('admin/users/list', { users })
+            
+            return res.render('admin/users/list', { users, userSession })
             
         } catch (error) {
             console.error(error)
@@ -18,29 +20,24 @@ module.exports = {
     },
 
     create(req, res) {
-        return res.render('admin/users/create')
+        const { user: userSession } = req
+
+        return res.render('admin/users/create', { userSession })
     },
 
     async edit(req, res) {    
+        const { user: userSession } = req
         let results = await User.find(req.params.id)
         const user = results.rows[0]
 
         if (!user) return res.send('User not found!')
 
-        return res.render('admin/users/edit', { user })
-    },
-
-    async show(req, res) {
-        const { user } = req
-
-        user.cpf_cnpj = formatCpfCnpj(user.cpf_cnpj)
-        user.cep = formatCep(user.cep)
-
-        return res.render('user/index', { user })
+        return res.render('admin/users/edit', { user, userSession })
     },
 
     async post(req, res) {
         const { email } = req.body
+        const { user: userSession } = req
 
         // create 
         const passwordToken = crypto.randomBytes(4).toString("hex")
@@ -55,48 +52,57 @@ module.exports = {
             `
         })
 
-        const userId = await User.create(req.body, passwordToken)
+        await User.create(req.body, passwordToken)
         
-        // req.session.userId = userId
+        let results = await User.all()
+        const users = results.rows
+    
+        if (!users) res.send('Users not found')
 
-        return res.redirect('/admin/users')
+        return res.render('admin/users/list', {
+            users,
+            userSession,
+            success: "Usuário cadastrado com sucesso! Senha enviada para e-mail informado."
+        })
     },
 
     async put(req, res) {
         try {
-            let { name, email, isAdmin } = req.body
+            const { user: userSession } = req
+            let { name, email, isAdmin, id } = req.body
     
-            await User.update(req.body.id, {
+            await User.update(id, {
                 name,
                 email,
                 is_admin: isAdmin || 0
             })
 
-            let results = await User.all()
-            const users = results.rows
+            let results = await User.find(id)
+            const user = results.rows[0]
+    
+            if (!user) return res.send('User not found!')
 
-            if (!users) res.send('Users not found')
-
-            return res.render('admin/users/list', {
-                user: req.body,
+            return res.render('admin/users/edit', {
+                userSession,
+                user,
                 success: "Conta atualizada com sucesso!",
-                users
             })
 
         } catch (error) {
             console.error(error)
 
-            return res.render('admin/users/list', {
-                error: "Algum erro aconteceu!"
+            return res.render('admin/users/edit', {
+                error: "Algum erro aconteceu!",
+                user,
+                userSession
             })
         }
     },
 
     async delete(req, res) {
         try {
+            const { user: userSession } = req
             await User.delete(req.body.id)
-
-            // req.session.destroy()
 
             let results = await User.all()
             const users = results.rows
@@ -105,7 +111,8 @@ module.exports = {
 
             return res.render('admin/users/list', {
                 success: "Usuário deletado com sucesso!",
-                users
+                users,
+                userSession
             })
 
         } catch(err) {
@@ -113,7 +120,8 @@ module.exports = {
 
             return res.render('admin/users/list', {
                 user: req.body,
-                error: "Erro ao tentar excluir o usuário!"
+                error: "Erro ao tentar excluir o usuário!",
+                userSession
             })
         }
     }
