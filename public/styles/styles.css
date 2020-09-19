@@ -27,6 +27,8 @@
 main {
     display: flex;
     flex-direction: column;
+    min-width: 940px;
+    align-items: center;
 }
 
 img {

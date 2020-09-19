@@ -5,13 +5,15 @@ const { onlyUsers } = require('../app/middlewares/session')
 
 const chefs = require('../app/controllers/chefs')
 
-routes.get('/', onlyUsers, chefs.index)
-routes.get('/create', onlyUsers, chefs.create)
-routes.get('/:id', onlyUsers, chefs.show)
-routes.get('/:id/edit', onlyUsers, chefs.edit)
+const UserValidator = require('../app/validators/user')
 
-routes.post('/', multer.array('photos', 1), chefs.post)
-routes.put('/', multer.array('photos', 1), chefs.put)
-routes.delete('/', chefs.delete)
+routes.get('/', onlyUsers, chefs.index)
+routes.get('/create', onlyUsers, UserValidator.isAdmin, chefs.create)
+routes.get('/:id', onlyUsers, chefs.show)
+routes.get('/:id/edit', onlyUsers, UserValidator.isAdmin, chefs.edit)
+
+routes.post('/', multer.array('photos', 1), onlyUsers, UserValidator.isAdmin, chefs.post)
+routes.put('/', multer.array('photos', 1), onlyUsers, UserValidator.isAdmin, chefs.put)
+routes.delete('/', onlyUsers, UserValidator.isAdmin, chefs.delete)
 
 module.exports = routes

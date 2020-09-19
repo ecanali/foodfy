@@ -6,7 +6,7 @@ const user = require('../validators/user')
 module.exports = {
     async list(req, res) {
         try {
-            const { user: userSession } = req
+            const userSession = req.user
             let results = await User.all()
             const users = results.rows
     
@@ -20,13 +20,13 @@ module.exports = {
     },
 
     create(req, res) {
-        const { user: userSession } = req
+        const userSession = req.user
 
         return res.render('admin/users/create', { userSession })
     },
 
     async edit(req, res) {    
-        const { user: userSession } = req
+        const userSession = req.user
         let results = await User.find(req.params.id)
         const user = results.rows[0]
 
@@ -36,8 +36,8 @@ module.exports = {
     },
 
     async post(req, res) {
+        const userSession = req.user
         const { email } = req.body
-        const { user: userSession } = req
 
         // create 
         const passwordToken = crypto.randomBytes(4).toString("hex")
@@ -68,7 +68,7 @@ module.exports = {
 
     async put(req, res) {
         try {
-            const { user: userSession } = req
+            const userSession = req.user
             let { name, email, isAdmin, id } = req.body
     
             await User.update(id, {
@@ -101,7 +101,7 @@ module.exports = {
 
     async delete(req, res) {
         try {
-            const { user: userSession } = req
+            const userSession = req.user
             await User.delete(req.body.id)
 
             let results = await User.all()

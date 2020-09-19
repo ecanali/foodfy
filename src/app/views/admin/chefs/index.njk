@@ -9,7 +9,9 @@
     <section>
         <div class="header-index">
             <h2 class="h2-admin">Gerenciar chefs</h2>
-            <a href="/admin/chefs/create" class="admin-button-1">Novo chef</a>
+            {% if userSession.is_admin == true %}
+                <a href="/admin/chefs/create" class="admin-button-1">Novo chef</a>
+            {% endif %}
         </div>
         <div class="grid-chefs-admin">
             
