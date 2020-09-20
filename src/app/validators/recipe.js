@@ -1,14 +1,22 @@
 const User = require('../models/User')
+
+const Recipe = require('../models/Recipe')
 const { compare } = require('bcryptjs')
 
-function checkAllFields(body) {
+async function checkAllFields(body) {
     // check if it has all fields
     const keys = Object.keys(body)
 
     for (let key of keys) {
         if (body[key] == "") {
+            const userSession = req.user
+            
+            let results = await Recipe.chefsSelectOptions()
+            const options = results.rows
+
             return {
-                user: body,
+                chefOptions: options,
+                recipe: body,
                 error: "Por favor, preencha todos os campos.",
                 userSession
             }
@@ -16,42 +24,19 @@ function checkAllFields(body) {
     }
 }
 
-async function isAdmin(req, res, next) {
-    // const { userId: id } = req.session
-
-    // const user = await User.findOne({ where: {id} })
-
-    const user = req.user
-
-    if (!user || user.is_admin == false) return res.render('admin/session/login', {
-        error: "Usuário não encontrado/permitido."
-    })
-
-    req.user = user
-
-    next()
-}
-
 async function post(req, res, next) {
-    const { user: userSession } = req
+    const userSession = req.user
     
     // check if it has all fields
     const fillAllFields = checkAllFields(req.body)
 
     if (fillAllFields) {
-        return res.render('admin/users/create', fillAllFields)
+        return res.render('admin/recipes/create', fillAllFields)
     }
 
-    // check if user exists [email unique]
-    let { email } = req.body
-
-    const user = await User.findOne({
-        where: { email }
-    })
-
-    if (user) return res.render('admin/users/create', {
-        user: req.body,
-        error: "Usuário já cadastrado.",
+    if (req.files.length == 0) return res.render('admin/recipes/create', {
+        recipe: req.body,
+        error: "Por favor, envie pelo menos 1 imagem.",
         userSession
     })
 
@@ -91,6 +76,5 @@ async function update(req, res, next) {
 
 module.exports = {
     post,
-    update,
-    isAdmin
+    update
 }

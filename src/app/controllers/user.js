@@ -62,7 +62,7 @@ module.exports = {
         return res.render('admin/users/list', {
             users,
             userSession,
-            success: "Usuário cadastrado com sucesso! Senha enviada para e-mail informado."
+            success: "Usuário cadastrado com sucesso! Senha enviada para o e-mail informado."
         })
     },
 

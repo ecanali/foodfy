@@ -119,64 +119,74 @@ module.exports = {
     },
 
     async show(req, res) {
-        const userSession = req.user
+        try {
+            const userSession = req.user
+        
+            let results = await Chef.find(req.params.id)
+            const chef = results.rows[0]
     
-        let results = await Chef.find(req.params.id)
-        const chef = results.rows[0]
-
-        if (!chef) return res.send('Chef not found')
-
-        // get images
-        results = await Chef.files(chef.file_id)
-        const files = results.rows.map(chef => ({
-        ...chef,
-        src:`${req.protocol}://${req.headers.host}${chef.path.replace("public", "")}`
-        }))
-
-        results = await Chef.chefRecipesList(req.params.id)
-        const recipes = results.rows
-       
-        // Pegar imagens das receitas de cada chef
-        async function getImage(recipeId) {
-            let results = await Recipe.files(recipeId)
-            const files = results.rows.map(recipe => ({
-                ...recipe,
-                src:`${req.protocol}://${req.headers.host}${recipe.path.replace("public", "")}`
-                }))
-                
-            return files[0]
+            if (!chef) return res.send('Chef not found')
+    
+            // get images
+            results = await Chef.files(chef.file_id)
+            const files = results.rows.map(chef => ({
+            ...chef,
+            src:`${req.protocol}://${req.headers.host}${chef.path.replace("public", "")}`
+            }))
+    
+            results = await Chef.chefRecipesList(req.params.id)
+            const recipes = results.rows
+           
+            // Pegar imagens das receitas de cada chef
+            async function getImage(recipeId) {
+                let results = await Recipe.files(recipeId)
+                const files = results.rows.map(recipe => ({
+                    ...recipe,
+                    src:`${req.protocol}://${req.headers.host}${recipe.path.replace("public", "")}`
+                    }))
+                    
+                return files[0]
+            }
+    
+            const recipesPromise = recipes.map(async recipe => {
+                recipe.img = await getImage(recipe.id)
+    
+                return recipe
+            })
+    
+            const recipeImages = await Promise.all(recipesPromise)
+    
+            if (userSession.is_admin == true)
+                return res.render('admin/chefs/chef', { recipes: recipeImages, chef, files, userSession })
+    
+            return res.render('admin/chefs/chef', { recipes: recipeImages, chef, files })
+            
+        } catch (error) {
+            console.error(error)
         }
-
-        const recipesPromise = recipes.map(async recipe => {
-            recipe.img = await getImage(recipe.id)
-
-            return recipe
-        })
-
-        const recipeImages = await Promise.all(recipesPromise)
-
-        if (userSession.is_admin == true)
-            return res.render('admin/chefs/chef', { recipes: recipeImages, chef, files, userSession })
-
-        return res.render('admin/chefs/chef', { recipes: recipeImages, chef, files })
     },
 
     async edit(req, res) {   
-        const userSession = req.user
-        
-        let results = await Chef.find(req.params.id)
-        const chef = results.rows[0]
+        try {
+            const userSession = req.user
+            
+            let results = await Chef.find(req.params.id)
+            const chef = results.rows[0]
+    
+            if (!chef) return res.send('Chef not found!')
+    
+            // get images
+            results = await Chef.files(chef.file_id)
+            const files = results.rows.map(chef => ({
+            ...chef,
+            src:`${req.protocol}://${req.headers.host}${chef.path.replace("public", "")}`
+            }))
+    
+            return res.render('admin/chefs/edit', { chef, files, userSession })
 
-        if (!chef) return res.send('Chef not found!')
-
-        // get images
-        results = await Chef.files(chef.file_id)
-        const files = results.rows.map(chef => ({
-        ...chef,
-        src:`${req.protocol}://${req.headers.host}${chef.path.replace("public", "")}`
-        }))
-
-        return res.render('admin/chefs/edit', { chef, files, userSession })
+        } catch (error) {
+            console.error(error)
+        }
     },
 
     async put(req, res) {

@@ -1,5 +1,5 @@
 const db = require('../../config/db')
-const { date } = require('../../lib/utils')
+
 const File = require('../models/File')
 
 module.exports = {
@@ -16,7 +16,7 @@ module.exports = {
         }
     },
 
-    create(data) {
+    create(data, userId) {
         try {
             const query = `
                 INSERT INTO recipes (
@@ -25,18 +25,18 @@ module.exports = {
                     ingredients,
                     preparation,
                     information,
-                    created_at
+                    user_id
                 ) VALUES ($1, $2, $3, $4, $5, $6)
                 RETURNING id
             `
-    
+            
             const values = [
                 data.chef,
                 data.title,
                 data.ingredients,
                 data.preparation,
                 data.information,
-                date(Date.now())
+                userId
             ]
     
             return db.query(query, values)
@@ -61,6 +61,19 @@ module.exports = {
                 LEFT JOIN chefs ON (recipes.chef_id = chefs.id)
                 WHERE recipes.id = $1
             `, [id])
+        } catch (error) {
+            console.error(error)
+        }
+    },
+
+    userRecipes(userId) {
+        try {
+            return db.query(`
+                SELECT recipes.*, chefs.name AS chef_name
+                FROM recipes
+                LEFT JOIN chefs ON (recipes.chef_id = chefs.id)
+                WHERE recipes.user_id = $1
+            `, [userId])
         } catch (error) {
             console.error(error)
         }

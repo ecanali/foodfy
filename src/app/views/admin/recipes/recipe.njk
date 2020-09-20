@@ -8,10 +8,10 @@
     <main>
         <div class="recipe-header-admin">
             <h2>Receita: {{ recipe.title }}</h2>
-            <a href="/admin/recipes/{{ recipe.id }}/edit">Editar receita</a>
+            {% if userSession.is_admin == true %}
+                <a href="/admin/recipes/{{ recipe.id }}/edit">Editar receita</a>
+            {% endif %}
         </div>
-
-        {# <img class="detail-img" src="{{ recipe.image }}" alt="{{ recipe.title }}"> #}
         
         <div class="gallery">
             <div class="highlight">
