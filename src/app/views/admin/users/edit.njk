@@ -37,19 +37,14 @@
                 name="id" 
                 value="{{ user.id }}"
             >
-
-            {# <input 
-                type="hidden" 
-                name="userSession" 
-                value="true"
-            > #}
-
         </form>
 
-        <form id="form-delete" action="/admin/users?_method=DELETE" method="POST">
-            <input type="hidden" name="id" value="{{ user.id }}">
-            <button class="admin-button-2" type="submit">Deletar</button>
-        </form>
+        {% if userSession.id != user.id %}
+            <form id="form-delete" action="/admin/users?_method=DELETE" method="POST">
+                <input type="hidden" name="id" value="{{ user.id }}">
+                <button class="admin-button-2" type="submit">Deletar</button>
+            </form>
+        {% endif %}
 
         {% include '../confirm.njk' %}
         

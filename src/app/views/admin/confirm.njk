@@ -1,9 +1,24 @@
 <script>
+    // delete button inside recipe/chef/user edit page
     const formDelete = document.querySelector('#form-delete')
-    formDelete.addEventListener('submit', function(event) {
-        const confirmation = confirm('Deseja realmente deletar?')
-        if (!confirmation) {
-            event.preventDefault()
-        }
-    })
+    if (formDelete) {
+        formDelete.addEventListener('submit', function(event) {
+            const confirmation = confirm('Deseja realmente deletar?')
+            if (!confirmation) {
+                event.preventDefault()
+            }
+        })
+    }
+
+    // delete button in users list page
+    const deleteButtons = document.querySelectorAll('.delete-user-form')
+    for (let i = 0; i < deleteButtons.length; i++) {
+        deleteButtons[i].addEventListener('submit', function(event) {
+            const confirmation = confirm('Deseja realmente deletar?')
+            if (!confirmation) {
+                event.preventDefault()
+            }
+        })
+    }
+
 </script>

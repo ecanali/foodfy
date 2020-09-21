@@ -7,28 +7,17 @@ module.exports = {
     async index(req, res) {
         try {
             const userSession = req.user
+
+            let results, recipes
             
-            // normal user logic
-            if (userSession.is_admin == false) {
-                let results = await Recipe.userRecipes(userSession.id)
-                const recipes = results.rows
-
-                if (!recipes) res.send('Recipes not found')
-
-                const recipesPromise = recipes.map(async recipe => {
-                    recipe.img = await getRecipeImages(recipe.id, req)
-
-                    return recipe
-                })
-        
-                const lastAdded = await Promise.all(recipesPromise)
-                
-                return res.render('admin/recipes/index', { recipes: lastAdded })
+            // normal/admin user logic
+            if (userSession.is_admin == true) {
+                results = await Recipe.all()
+                recipes = results.rows
+            } else {
+                results = await Recipe.userRecipes(userSession.id)
+                recipes = results.rows
             }
-
-            // admin user logic
-            let results = await Recipe.all()
-            const recipes = results.rows
 
             if (!recipes) res.send('Recipes not found')
 
@@ -40,7 +29,10 @@ module.exports = {
     
             const lastAdded = await Promise.all(recipesPromise)
             
-            return res.render('admin/recipes/index', { recipes: lastAdded, userSession })
+            return res.render('admin/recipes/index', { 
+                recipes: lastAdded, 
+                userSession 
+            })
             
         } catch (error) {
             console.error(error)
@@ -86,30 +78,15 @@ module.exports = {
             await Promise.all(recipeFilesPromise)
 
             // index render requirements
-            if (userSession.is_admin == false) {
-                let results = await Recipe.userRecipes(userSession.id)
-                const recipes = results.rows
-
-                if (!recipes) res.send('Recipes not found')
-
-                const recipesPromise = recipes.map(async recipe => {
-                    recipe.img = await getRecipeImages(recipe.id, req)
-
-                    return recipe
-                })
-        
-                const lastAdded = await Promise.all(recipesPromise)
-                
-                return res.render('admin/recipes/index', { 
-                    recipes: lastAdded,
-                    userSession, 
-                    success: "Receita cadastrada com sucesso!"
-                })
+            let recipes
+            
+            if (userSession.is_admin == true) {
+                results = await Recipe.all()
+                recipes = results.rows
+            } else {
+                results = await Recipe.userRecipes(userSession.id)
+                recipes = results.rows
             }
-
-            // admin user logic
-            results = await Recipe.all()
-            const recipes = results.rows
 
             if (!recipes) res.send('Recipes not found')
 
@@ -123,7 +100,7 @@ module.exports = {
             
             return res.render('admin/recipes/index', { 
                 recipes: lastAdded, 
-                userSession, 
+                userSession,
                 success: "Receita cadastrada com sucesso!"
             })
 
@@ -188,8 +165,19 @@ module.exports = {
     
             results = await Recipe.chefsSelectOptions()
             const options = results.rows
-    
-            return res.render('admin/recipes/edit', { recipe, chefOptions: options, files, userSession })
+
+            if (userSession.id != recipe.user_id && userSession.is_admin != true) {
+                return res.render('admin/session/login', {
+                    error: "Usuário não encontrado/permitido."
+                })
+            }
+
+            return res.render('admin/recipes/edit', { 
+                recipe, 
+                chefOptions: options, 
+                files, 
+                userSession 
+            })
             
         } catch (error) {
             console.error(error)
@@ -277,23 +265,20 @@ module.exports = {
             await Recipe.delete(req.body.id)
 
             // index render requirements
-            let results = await Recipe.all()
-            const recipes = results.rows
+            let results, recipes
+            
+            if (userSession.is_admin == true) {
+                results = await Recipe.all()
+                recipes = results.rows
+            } else {
+                results = await Recipe.userRecipes(userSession.id)
+                recipes = results.rows
+            }
 
             if (!recipes) res.send('Recipes not found')
 
-            async function getImage(recipeId) {
-                let results = await Recipe.files(recipeId)
-                const files = results.rows.map(recipe => ({
-                    ...recipe,
-                    src:`${req.protocol}://${req.headers.host}${recipe.path.replace("public", "")}`
-                    }))
-                    
-                return files[0]
-            }
-
             const recipesPromise = recipes.map(async recipe => {
-                recipe.img = await getImage(recipe.id)
+                recipe.img = await getRecipeImages(recipe.id, req)
 
                 return recipe
             })
@@ -302,8 +287,8 @@ module.exports = {
             
             return res.render('admin/recipes/index', { 
                 recipes: lastAdded, 
+                userSession,
                 success: "Receita deletada com sucesso!",
-                userSession
             })
                         
         } catch (error) {

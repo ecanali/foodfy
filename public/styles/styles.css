@@ -895,7 +895,6 @@ form .item #photos-preview img {
     min-width: 139px;
 }
 
-/* USERS ADMIN */
 .error {
     background-color: #DC4747;
     padding: 4px;
@@ -908,7 +907,7 @@ form .item #photos-preview img {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 52px 200px;
-    margin-top: 64px;
+    margin: 64px auto;
 }
 
 .user-admin a {
@@ -922,13 +921,21 @@ form .item #photos-preview img {
     margin-right: 16px;
 }
 
-.user-admin a + a {
+.user-content form.delete-user-form {
+    min-width: 0;
+    display: inline-block;
+}
+
+.user-content form.delete-user-form button {
+    appearance: none;
+    border: none;
+    background-color: white;
+
     font-weight: bold;
     color:#F55A5A;
     font-size: 14px;
     line-height: 16px;
     cursor: pointer;
-    display: inline-block;
     margin-top: 16px;
 }
 

@@ -20,10 +20,7 @@
                         <p>{{ user.email }}</p>
                         <a href="/admin/users/{{ user.id }}/edit">Editar</a>
                         {% if userSession.id != user.id %}
-                            <form class="delete-user-form" action="/admin/users?_method=DELETE" method="POST">
-                                <input type="hidden" name="id" value="{{ user.id }}">
-                                <button class="delete-user-button" type="submit">Remover</button>
-                            </form>
+                            <a href="/admin/users/{{ user.id }}/edit">Remover</a>
                         {% endif %}
                     </div>
                 </div>
@@ -31,7 +28,5 @@
 
         </div>
     </section>
-
-    {% include '../confirm.njk' %}
     
 {% endblock content %}

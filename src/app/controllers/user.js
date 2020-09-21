@@ -102,8 +102,12 @@ module.exports = {
     async delete(req, res) {
         try {
             const userSession = req.user
+            
             await User.delete(req.body.id)
 
+            // console.log(`Usuário ${req.body.id} deletado!`)
+
+            // list render requirements
             let results = await User.all()
             const users = results.rows
 
