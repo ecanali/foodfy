@@ -11,7 +11,7 @@
             
             {% for chef in chefs %}
 
-            <div class="chef-admin" id="{{ chef.name }}">
+            <div class="chef-admin" id="{{ chef.id }}">
                 <img src="{{ chef.img.src }}" alt="{{ chef.name }}">
                 <div class="texto-chef-admin">
                     <h3>{{ chef.name }}</h3>
@@ -20,6 +20,7 @@
                         {% else %}
                         <h4>{{ chef.total_recipes }} receitas</h4>
                     {% endif %}
+                    <a href="/chefs/{{ chef.id }}">Visualizar</a>
                 </div>
             </div>
 

@@ -52,18 +52,33 @@ module.exports = {
         try {
             const userSession = req.user
             
+            let results = await Recipe.chefsSelectOptions()
+            const options = results.rows
+
             // Separa info do Objeto vindo do form por suas Chaves e testa se n veio vazio
             const keys = Object.keys(req.body)
     
             for (let key of keys) {
-                if (req.body[key] == "")
-                    return res.send("Please, fill out all fields")
+                if (req.body[key] == "") {
+                    return res.render('admin/recipes/create', { 
+                        chefOptions: options, 
+                        userSession,
+                        recipe: req.body,
+                        error: "Por favor, preencha todos os campos!"
+                    })
+                }
             }
-            
-            if (req.files.length == 0)
-                return res.send('Please send at least one image')
+
+            if (req.files.length == 0) {
+                return res.render('admin/recipes/create', { 
+                    chefOptions: options, 
+                    userSession,
+                    recipe: req.body,
+                    error: "Por favor, envie no mínimo uma imagem!"
+                })
+            }
     
-            let results = await Recipe.create(req.body, userSession.id)
+            results = await Recipe.create(req.body, userSession.id)
             const recipeId = results.rows[0].id
     
             const filesPromise = req.files.map(file => File.create(file))
@@ -188,12 +203,30 @@ module.exports = {
         try {
             const userSession = req.user
             
+            let results = await Recipe.chefsSelectOptions()
+            const options = results.rows
+
             // Separa info do Objeto vindo do form por suas Chaves e testa se n veio vazio
             const keys = Object.keys(req.body)
     
             for (let key of keys) {
-                if (req.body[key] == "" && key != "removed_files" && req.files.length == 0)
-                    return res.send("Please, fill out all fields!")
+                if (req.body[key] == "" && key != "removed_files" && req.files.length == 0) {
+                    return res.render('admin/recipes/edit', { 
+                        chefOptions: options, 
+                        userSession,
+                        recipe: req.body,
+                        error: "Por favor, preencha todos os campos!"
+                    })
+                }
+            }
+
+            if (req.files.length == 0) {
+                return res.render('admin/recipes/edit', { 
+                    chefOptions: options, 
+                    userSession,
+                    recipe: req.body,
+                    error: "Por favor, envie no mínimo uma imagem!"
+                })
             }
     
             if (req.files.length != 0) {
@@ -223,7 +256,7 @@ module.exports = {
             await Recipe.update(req.body)
             
             // show render requirements
-            let results = await Recipe.find(req.body.id)
+            results = await Recipe.find(req.body.id)
             const recipe = results.rows[0]
     
             if (!recipe) return res.send('Recipe not found')

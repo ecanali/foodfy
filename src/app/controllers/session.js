@@ -17,7 +17,9 @@ module.exports = {
     logout(req, res) {
         req.session.destroy()
 
-        return res.redirect('/admin/users/login')
+        return res.render('admin/session/login', {
+            success: "Sua conta está desconectada!"
+        })
     },
 
     forgotForm(req, res) {
@@ -56,7 +58,7 @@ module.exports = {
             })
     
             // notify the user that the recovery email has been sent
-            return res.render('admin/session/forgot-password', {
+            return res.render('admin/session/login', {
                 success: "Verifique seu email para resetar sua senha!"
             })
             

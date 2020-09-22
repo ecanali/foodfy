@@ -133,7 +133,7 @@ module.exports = {
         }
     },
 
-    async show(req, res) {
+    async recipeShow(req, res) {
         try {
             let results = await Recipe.find(req.params.id)
             const recipe = results.rows[0]
@@ -189,6 +189,49 @@ module.exports = {
         } catch (error) {
             console.error(error)
         }
-    }
+    },
+
+    async chefShow(req, res) {
+        try {        
+            let results = await Chef.find(req.params.id)
+            const chef = results.rows[0]
+    
+            if (!chef) return res.send('Chef not found')
+    
+            // get images
+            results = await Chef.files(chef.file_id)
+            const files = results.rows.map(chef => ({
+            ...chef,
+            src:`${req.protocol}://${req.headers.host}${chef.path.replace("public", "")}`
+            }))
+    
+            results = await Chef.chefRecipesList(req.params.id)
+            const recipes = results.rows
+           
+            // Pegar imagens das receitas de cada chef
+            async function getImage(recipeId) {
+                let results = await Recipe.files(recipeId)
+                const files = results.rows.map(recipe => ({
+                    ...recipe,
+                    src:`${req.protocol}://${req.headers.host}${recipe.path.replace("public", "")}`
+                    }))
+                    
+                return files[0]
+            }
+    
+            const recipesPromise = recipes.map(async recipe => {
+                recipe.img = await getImage(recipe.id)
+    
+                return recipe
+            })
+    
+            const recipeImages = await Promise.all(recipesPromise)
+    
+            return res.render('site/chef', { recipes: recipeImages, chef, files })
+            
+        } catch (error) {
+            console.error(error)
+        }
+    },
     
 }

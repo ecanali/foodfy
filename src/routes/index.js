@@ -20,7 +20,8 @@ routes.get('/about', function(req, res) {
 })
 routes.get('/recipes', site.recipesList)
 routes.get('/recipes/filter', site.filteredRecipesList)
-routes.get('/recipes/:id', site.show)
+routes.get('/recipes/:id', site.recipeShow)
 routes.get('/chefs', site.chefsList)
+routes.get('/chefs/:id', site.chefShow)
 
 module.exports = routes

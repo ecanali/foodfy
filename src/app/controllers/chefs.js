@@ -230,7 +230,7 @@ module.exports = {
             src:`${req.protocol}://${req.headers.host}${chef.path.replace("public", "")}`
             }))
 
-            results = await Chef.chefRecipesList(req.params.id)
+            results = await Chef.chefRecipesList(req.body.id)
             const recipes = results.rows
         
             // Pegar imagens das receitas de cada chef

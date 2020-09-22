@@ -2,15 +2,16 @@ const User = require('../models/User')
 
 module.exports = {
     async index(req, res) {
-        const { user: userSession } = req
-        const user = req.user
+        const userSession = req.user
 
-        return res.render('admin/profile/index', { userSession, user })
+        return res.render('admin/profile/index', { 
+            userSession,
+            success: "Sua conta está conectada!"
+        })
     },
 
     async put(req, res) {
         try {
-            const { user: userSession } = req
             let { name, email, id } = req.body
     
             await User.update(id, {
@@ -18,12 +19,13 @@ module.exports = {
                 email,
             })
 
-            const user = await User.findOne({ where: {id} })
+            const userSession = await User.findOne({ where: {id} })
 
-            if (!user) res.send('User not found')
+            if (!userSession) return res.render('admin/profile/index', {
+                error: "Erro! Usuário não encontrado!"
+            })
 
             return res.render('admin/profile/index', {
-                user,
                 success: "Conta atualizada com sucesso!",
                 userSession
             })
@@ -33,9 +35,8 @@ module.exports = {
 
             return res.render('admin/profile/index', {
                 error: "Algum erro aconteceu!",
-                user,
                 userSession
             })
         }
-    },
+    }
 }
