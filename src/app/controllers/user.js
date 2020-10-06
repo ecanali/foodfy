@@ -3,17 +3,11 @@ const { hash } = require('bcryptjs')
 const User = require('../models/User')
 const crypto = require('crypto')
 const mailer = require('../../lib/mailer')
-const user = require('../validators/user')
 
 module.exports = {
     async list(req, res) {
         try {
             const userSession = req.user
-            
-            // let results = await User.all()
-            // const users = results.rows
-            
-            // if (!users) res.send('Users not found')
 
             const users = await User.findAll()
             
@@ -59,13 +53,6 @@ module.exports = {
             })
 
             const users = await User.findAll()
-
-            // await User.create(req.body, passwordToken)
-            
-            // let results = await User.all()
-            // const users = results.rows
-        
-            // if (!users) res.send('Users not found')
     
             return res.render('admin/users/list', {
                 users,
@@ -85,18 +72,17 @@ module.exports = {
             })
         }
     },
-
     async edit(req, res) {    
-        const userSession = req.user
-        let results = await User.find(req.params.id)
-        const user = results.rows[0]
-
-        if (!user) return res.send('User not found!')
-
-        return res.render('admin/users/edit', { user, userSession })
+        try {
+            const userSession = req.user
+            const user = await User.find(req.params.id)
+    
+            return res.render('admin/users/edit', { user, userSession })
+            
+        } catch (error) {
+            console.error(error)
+        }
     },
-
-
     async put(req, res) {
         try {
             const userSession = req.user
@@ -108,11 +94,8 @@ module.exports = {
                 is_admin: isAdmin || 0
             })
 
-            let results = await User.find(id)
-            const user = results.rows[0]
+            const user = await User.find(id)
     
-            if (!user) return res.send('User not found!')
-
             return res.render('admin/users/edit', {
                 userSession,
                 user,
@@ -122,27 +105,22 @@ module.exports = {
         } catch (error) {
             console.error(error)
 
+            const userSession = req.user
+
             return res.render('admin/users/edit', {
                 error: "Algum erro aconteceu!",
-                user,
+                user: req.body,
                 userSession
             })
         }
     },
-
     async delete(req, res) {
         try {
             const userSession = req.user
             
             await User.delete(req.body.id)
 
-            // console.log(`Usuário ${req.body.id} deletado!`)
-
-            // list render requirements
-            let results = await User.all()
-            const users = results.rows
-
-            if (!users) res.send('Users not found')
+            const users = await User.findAll()
 
             return res.render('admin/users/list', {
                 success: "Usuário deletado com sucesso!",
@@ -153,8 +131,12 @@ module.exports = {
         } catch(err) {
             console.error(err)
 
+            const userSession = req.user
+
+            const users = await User.findAll()
+
             return res.render('admin/users/list', {
-                user: req.body,
+                users,
                 error: "Erro ao tentar excluir o usuário!",
                 userSession
             })

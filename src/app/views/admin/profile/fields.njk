@@ -4,7 +4,7 @@
         <input
             type="text"
             name="name"
-            value="{{ userSession.name }}"
+            value="{{ user.name }}"
             placeholder="Digite o nome completo" 
             required
         >
@@ -17,7 +17,7 @@
         <input
             type="text"
             name="email"
-            value="{{ userSession.email }}"
+            value="{{ user.email }}"
             placeholder="Digite o email" 
             onblur="Validate.apply(this, 'isEmail')"
             required

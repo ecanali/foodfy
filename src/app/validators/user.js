@@ -1,42 +1,36 @@
 const User = require('../models/User')
 const { compare } = require('bcryptjs')
 
-function checkAllFields(body) {
+function checkAllFields(req) {
     // check if it has all fields
-    const keys = Object.keys(body)
+    const keys = Object.keys(req.body)
 
     for (let key of keys) {
-        if (body[key] == "") {
+        if (req.body[key] == "") {
             return {
-                user: body,
+                user: req.body,
                 error: "Por favor, preencha todos os campos.",
-                userSession
+                userSession: req.user
             }
         }
     }
 }
 
 async function isAdmin(req, res, next) {
-    // const { userId: id } = req.session
-
-    // const user = await User.findOne({ where: {id} })
-
     const user = req.user
 
     if (!user || user.is_admin == false) return res.render('admin/session/login', {
         error: "Usuário não encontrado/permitido."
     })
 
-    req.user = user
-
     next()
 }
 
 async function post(req, res, next) {
-    const { user: userSession } = req
+    const userSession = req.user
     
     // check if it has all fields
-    const fillAllFields = checkAllFields(req.body)
+    const fillAllFields = checkAllFields(req)
 
     if (fillAllFields) {
         return res.render('admin/users/create', fillAllFields)
@@ -55,36 +49,34 @@ async function post(req, res, next) {
         userSession
     })
 
-    req.user = userSession
-
     next()
 }
 
 async function update(req, res, next) {
+    const user = req.user
+    
     // check if it has all fields
-    const fillAllFields = checkAllFields(req.body)
+    const fillAllFields = checkAllFields(req)
 
     if (fillAllFields) {
         return res.render('admin/profile', fillAllFields)
     }
 
-    const { id, password } = req.body
+    const { password } = req.body
 
     if (!password) return res.render('admin/profile/index', {
+        userSession: user,
         user: req.body,
         error: "Coloque sua senha para atualizar seu cadastro."
     })
 
-    const user = await User.findOne({ where: {id} })
-
     const passed = await compare(password, user.password)
 
     if (!passed) return res.render("admin/profile/index", {
+        userSession: user,
         user: req.body,
         error: "Senha incorreta."
     })
-
-    req.user = user
 
     next()
 }

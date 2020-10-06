@@ -6,12 +6,15 @@ module.exports = {
 
         return res.render('admin/profile/index', { 
             userSession,
+            user: userSession,
             success: "Sua conta está conectada!"
         })
     },
 
     async put(req, res) {
         try {
+            const userSession = req.user
+            
             let { name, email, id } = req.body
     
             await User.update(id, {
@@ -19,22 +22,20 @@ module.exports = {
                 email,
             })
 
-            const userSession = await User.findOne({ where: {id} })
-
-            if (!userSession) return res.render('admin/profile/index', {
-                error: "Erro! Usuário não encontrado!"
-            })
-
             return res.render('admin/profile/index', {
                 success: "Conta atualizada com sucesso!",
+                user: req.body,
                 userSession
             })
 
         } catch (error) {
             console.error(error)
 
+            const userSession = req.user
+
             return res.render('admin/profile/index', {
                 error: "Algum erro aconteceu!",
+                user: req.body,
                 userSession
             })
         }
