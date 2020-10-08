@@ -7,13 +7,11 @@ module.exports = {
     loginForm(req, res) {
         return res.render('admin/session/login')
     },
-
     login(req, res) {
         req.session.userId = req.user.id
 
         return res.redirect("/admin/profile")
     },
-
     logout(req, res) {
         req.session.destroy()
 
@@ -21,11 +19,9 @@ module.exports = {
             success: "Sua conta está desconectada!"
         })
     },
-
     forgotForm(req, res) {
         return res.render('admin/session/forgot-password')
     },
-
     async forgot(req, res) {
         const user = req.user
         
@@ -70,11 +66,9 @@ module.exports = {
             })
         }
     },
-
     resetForm(req, res) {
         return res.render('admin/session/password-reset', { token: req.query.token })
     },
-
     async reset(req, res) {
         const user = req.user
         const { password, token } = req.body

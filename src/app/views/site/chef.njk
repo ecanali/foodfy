@@ -9,7 +9,7 @@
         <div class="recipe-header-admin">
             <h2>Chef: {{ chef.name }}</h2>
         </div>
-        <img class="chef-img" src="{{ files[0].src }}" alt="{{ files[0].name }}">
+        <img class="chef-img" src="{{ chefImage.src }}" alt="{{ chefImage.name }}">
         <div class="recipe-title">
             <h1>{{ chef.name }}</h1>
             {% if chef.total_recipes == 1 %}

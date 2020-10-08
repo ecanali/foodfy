@@ -10,7 +10,6 @@ module.exports = {
             success: "Sua conta está conectada!"
         })
     },
-
     async put(req, res) {
         try {
             const userSession = req.user
