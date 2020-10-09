@@ -1,13 +1,9 @@
-const Base = require('./Base')
-
 const db = require('../../config/db')
 const fs = require('fs')
 
-Base.init({ table: 'files' })
-
 module.exports = {
-    // ...Base,
-    async create({ filename, path }) {
+
+    create({ filename, path }) {
         try {
             const query = `
                 INSERT INTO files (
@@ -22,10 +18,7 @@ module.exports = {
                 path
             ]
     
-            const results = await db.query(query, values)
-
-            return results.rows
-
+            return db.query(query, values)
         } catch (error) {
             console.error(error)
         }

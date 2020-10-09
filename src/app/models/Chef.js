@@ -23,8 +23,7 @@ module.exports = {
             console.error(error)
         }
     },
-
-    create(data, fileId) {
+    async create(data, fileId) {
         try {
             const query = `
                 INSERT INTO chefs (
@@ -38,8 +37,11 @@ module.exports = {
                 data.name,
                 fileId
             ]
+
+            const results = await db.query(query, values)
     
-            return db.query(query, values)
+            return results.rows
+
         } catch (error) {
             console.error(error)
         }

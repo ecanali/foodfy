@@ -12,7 +12,7 @@
                 <a href="/admin/chefs/{{ chef.id }}/edit">Editar chef</a>
             {% endif %}
         </div>
-        <img class="chef-img" src="{{ files[0].src }}" alt="{{ files[0].name }}">
+        <img class="chef-img" src="{{ chefImage.src }}" alt="{{ chefImage.name }}">
         <div class="recipe-title">
             <h1>{{ chef.name }}</h1>
             {% if chef.total_recipes == 1 %}
