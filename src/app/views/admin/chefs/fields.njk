@@ -13,12 +13,12 @@
 <div class="item">
     <h4>Avatar</h4>
     
-    {% if files %}
+    {% if chefImage %}
         <div>
             <input
                 type="url"
                 class="avatar-url"
-                value="http:{{ files[0].src }}"
+                value="http:{{ chefImage.src }}"
                 readonly
             >
         </div>

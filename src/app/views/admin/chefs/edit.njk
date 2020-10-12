@@ -27,14 +27,14 @@
             <input 
                 type="hidden" 
                 name="file_id" 
-                value="{{ files[0].id }}"
+                value="{{ chefImage.id }}"
             >
 
         </form>
         <form id="form-delete" action="/admin/chefs?_method=DELETE" method="POST">
             <input type="hidden" name="id" value="{{ chef.id }}">
             <input type="hidden" name="totalRecipes" value="{{ chef.total_recipes }}">
-            <input type="hidden" name="file_id" value="{{ files[0].id }}">
+            <input type="hidden" name="file_id" value="{{ chefImage.id }}">
             <input 
                 type="hidden" 
                 name="name" 

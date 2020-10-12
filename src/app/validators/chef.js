@@ -1,8 +1,3 @@
-const User = require('../models/User')
-
-const Recipe = require('../models/Recipe')
-const { compare } = require('bcryptjs')
-
 function checkAllFields(req) {
     // check if it has all fields
     const keys = Object.keys(req.body)
@@ -18,7 +13,7 @@ function checkAllFields(req) {
     }
 }
 
-async function post(req, res, next) {    
+function post(req, res, next) {    
     // check if it has all fields
     const fillAllFields = checkAllFields(req)
 
@@ -27,7 +22,7 @@ async function post(req, res, next) {
 
     if (req.files.length == 0)
         return res.render('admin/chefs/create', {
-            error: "Por favor envie uma imagem!",
+            error: "Por favor, envie uma imagem!",
             chef: req.body,
             userSession: req.user
         })
@@ -35,31 +30,22 @@ async function post(req, res, next) {
     next()
 }
 
-async function update(req, res, next) {
+function update(req, res, next) {
     // check if it has all fields
-    const fillAllFields = checkAllFields(req.body)
+    const fillAllFields = checkAllFields(req)
 
     if (fillAllFields) {
-        return res.render('admin/profile', fillAllFields)
+        return res.render('admin/chefs/edit', fillAllFields)
     }
 
-    const { id, password } = req.body
+    // console.log(req)
 
-    if (!password) return res.render('admin/profile/index', {
-        user: req.body,
-        error: "Coloque sua senha para atualizar seu cadastro."
-    })
-
-    const user = await User.findOne({ where: {id} })
-
-    const passed = await compare(password, user.password)
-
-    if (!passed) return res.render("admin/profile/index", {
-        user: req.body,
-        error: "Senha incorreta."
-    })
-
-    req.user = user
+    // if (req.files.length == 0 || req.body.file_id == "")
+    //     return res.render('admin/chefs/edit', {
+    //         error: "Por favor envie uma imagem!",
+    //         chef: req.body,
+    //         userSession: req.user
+    //     })
 
     next()
 }

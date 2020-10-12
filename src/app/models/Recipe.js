@@ -21,8 +21,7 @@ module.exports = {
             console.error(error)
         }
     },
-
-    create(data, userId) {
+    async create(data, userId) {
         try {
             const query = `
                 INSERT INTO recipes (
@@ -44,16 +43,24 @@ module.exports = {
                 data.information,
                 userId
             ]
+
+            const results = await db.query(query, values)
     
-            return db.query(query, values)
+            return results.rows[0].id
+
         } catch (error) {
             console.error(error)
         }
     },
 
-    chefsSelectOptions() {
+    async chefsSelectOptions() {
         try {
-            return db.query(`SELECT name, id FROM chefs ORDER BY name ASC`)
+            const results = await db.query(`
+                SELECT name, id FROM chefs ORDER BY name ASC
+            `)
+            
+            return results.rows
+
         } catch (error) {
             console.error(error)
         }
@@ -74,15 +81,16 @@ module.exports = {
             console.error(error)
         }
     },
-
-    userRecipes(userId) {
+    async userRecipes(userId) {
         try {
-            return db.query(`
+            const results = await db.query(`
                 SELECT recipes.*, chefs.name AS chef_name
                 FROM recipes
                 LEFT JOIN chefs ON (recipes.chef_id = chefs.id)
                 WHERE recipes.user_id = $1
             `, [userId])
+
+            return results.rows
         } catch (error) {
             console.error(error)
         }

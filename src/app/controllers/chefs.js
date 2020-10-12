@@ -37,10 +37,10 @@ module.exports = {
     
             const lastAdded = await Promise.all(chefsPromise)
             
-            if (userSession.is_admin == true)
-                return res.render('admin/chefs/index', { chefs: lastAdded, userSession })
-
-            return res.render('admin/chefs/index', { chefs: lastAdded })
+            return res.render('admin/chefs/index', { 
+                chefs: lastAdded, 
+                userSession 
+            })
             
         } catch (error) {
             console.error(error)
@@ -108,145 +108,92 @@ module.exports = {
     
             const recipeImages = await Promise.all(recipesPromise)
 
-            if (userSession.is_admin == true)
-                return res.render('admin/chefs/chef', { recipes: recipeImages, chef, chefImage, userSession })
-    
-            return res.render('admin/chefs/chef', { recipes: recipeImages, chef, chefImage })
+            return res.render('admin/chefs/chef', { recipes: recipeImages, chef, chefImage, userSession })
             
         } catch (error) {
             console.error(error)
         }
     },
-
     async edit(req, res) {   
         try {
             const userSession = req.user
-            
-            let results = await Chef.find(req.params.id)
-            const chef = results.rows[0]
+
+            const chef = await Chef.find(req.params.id)
     
-            if (!chef) return res.send('Chef not found!')
+            const chefImage = await getChefImage(req.params.id, req)
     
-            // get images
-            results = await Chef.files(chef.file_id)
-            const files = results.rows.map(chef => ({
-            ...chef,
-            src:`${req.protocol}://${req.headers.host}${chef.path.replace("public", "")}`
-            }))
-    
-            return res.render('admin/chefs/edit', { chef, files, userSession })
+            return res.render('admin/chefs/edit', { chef, chefImage, userSession })
 
         } catch (error) {
             console.error(error)
         }
     },
-
     async put(req, res) {
         try {
             const userSession = req.user
-            
-            // Separa info do Objeto vindo do form por suas Chaves e testa se n veio vazio
-            const keys = Object.keys(req.body)
-    
-            for (let key of keys) {
-                if (req.body[key] == "" && req.files.length == 0)
-                    return res.send("Please, fill out all fields!")
-            }
-    
-            if (req.files.length != 0) {
-                const oldFileId = req.body.file_id
-                const filesPromise = req.files.map(file => File.create(file))
-                const filesResults = await Promise.all(filesPromise)
-    
-                const chefFilesPromise = filesResults.map(async file => {
-                    const newFileId = file.rows[0].id
-    
-                    await Chef.update(req.body, newFileId)
-    
-                    File.removeDeletedAvatarDB(oldFileId)
-                })
-    
-                await Promise.all(chefFilesPromise)
-            }
-
-            // show render requirements
-            let results = await Chef.find(req.body.id)
-            const chef = results.rows[0]
-
-            if (!chef) return res.send('Chef not found')
-
-            // get images
-            results = await Chef.files(chef.file_id)
-            const files = results.rows.map(chef => ({
-            ...chef,
-            src:`${req.protocol}://${req.headers.host}${chef.path.replace("public", "")}`
-            }))
-
-            results = await Chef.chefRecipesList(req.body.id)
-            const recipes = results.rows
         
-            // Pegar imagens das receitas de cada chef
-            async function getImage(recipeId) {
-                let results = await Recipe.files(recipeId)
-                const files = results.rows.map(recipe => ({
-                    ...recipe,
-                    src:`${req.protocol}://${req.headers.host}${recipe.path.replace("public", "")}`
-                    }))
-                    
-                return files[0]
-            }
+            const oldFileId = req.body.file_id
+            const filesPromise = req.files.map(file => File.create(file))
+            const filesResults = await Promise.all(filesPromise)
 
-            const recipesPromise = recipes.map(async recipe => {
-                recipe.img = await getImage(recipe.id)
+            const chefFilesPromise = filesResults.map(async file => {
+                const newFileId = file[0].id
 
-                return recipe
+                await Chef.update(req.body, newFileId)
+
+                File.removeDeletedAvatarDB(oldFileId)
             })
 
-            const recipeImages = await Promise.all(recipesPromise)
+            await Promise.all(chefFilesPromise)
+            
+            // show render requirements
+            const chef = await Chef.find(req.body.id)
+
+            const chefImage = await getChefImage(req.body.id, req)
+
+            const recipes = await Chef.chefRecipesList(req.body.id)
     
-            return res.render(`admin/chefs/chef`, { 
+            const recipesPromise = recipes.map(async recipe => {
+                recipe.img = await getRecipeImage(recipe.id, req)
+    
+                return recipe
+            })
+    
+            const recipeImages = await Promise.all(recipesPromise)
+
+            return res.render('admin/chefs/chef', { 
                 recipes: recipeImages, 
                 chef, 
-                files, 
-                success: "Chef atualizado com sucesso!",
-                userSession 
+                chefImage, 
+                userSession,
+                success: "Chef atualizado com sucesso!"
             })
             
         } catch (error) {
             console.error(error)
+
+            const chefImage = await getChefImage(req.params.id, req)
 
             return res.render('admin/chefs/edit', {
                 error: "Algum erro aconteceu!",
                 chef: req.body,
-                files,
-                userSession
+                chefImage,
+                userSession: req.user
             })
         }
     },
-
     async delete(req, res) {        
         try {
             const userSession = req.user
 
-            // edit render requirements
-            let results = await Chef.find(req.body.id)
-            const chef = results.rows[0]
-
-            if (!chef) return res.send('Chef not found!')
-
-            // get images
-            results = await Chef.files(chef.file_id)
-            const files = results.rows.map(chef => ({
-            ...chef,
-            src:`${req.protocol}://${req.headers.host}${chef.path.replace("public", "")}`
-            }))
-
             // does not allow chef deletion if a recipe in his/her name
             if (req.body.totalRecipes > 0) {
+                const chefImage = await getChefImage(req.body.id, req)
+                
                 return res.render('admin/chefs/edit', {
                     error: "Erro ao deletar, chef não pode ter receitas em seu nome!",
                     chef: req.body,
-                    files,
+                    chefImage,
                     userSession
                 })
             }
@@ -254,24 +201,11 @@ module.exports = {
             await Chef.delete(req.body.id, req.body.file_id)
             
             // index render requirements
-            results = await Chef.all()
-            const chefs = results.rows
-    
-            if (!chefs) res.send('Chefs not found')
-    
-            async function getImage(chefId) {
-                let results = await Chef.filesByChefId(chefId)
-                const files = results.rows.map(chef => ({
-                    ...chef,
-                    src:`${req.protocol}://${req.headers.host}${chef.path.replace("public", "")}`
-                    }))
-                    
-                return files[0]
-            }
-    
+            const chefs = await Chef.all()
+
             const chefsPromise = chefs.map(async chef => {
-                chef.img = await getImage(chef.id)
-    
+                chef.img = await getChefImage(chef.id, req)
+
                 return chef
             })
     
@@ -286,13 +220,14 @@ module.exports = {
         } catch (error) {
             console.error(error)
 
+            const chefImage = await getChefImage(req.body.id, req)
+
             return res.render('admin/chefs/edit', {
                 error: "Algum erro aconteceu!",
                 chef: req.body,
-                files,
-                userSession
+                chefImage,
+                userSession: req.user
             })
         }
     }
-
 }

@@ -79,7 +79,7 @@ module.exports = {
         }
     },
 
-    update(data, fileId) {
+    async update(data, fileId) {
         try {
             const query = `
                 UPDATE chefs SET
@@ -93,8 +93,11 @@ module.exports = {
                 fileId,
                 data.id
             ]
+
+            const results = await db.query(query, values)
             
-            return db.query(query, values)
+            return results.rows
+
         } catch (error) {
             console.error(error)
         }
@@ -102,7 +105,7 @@ module.exports = {
 
     async delete(ChefId, fileId) {
         try {
-            db.query(`DELETE FROM chefs WHERE id = $1`, [ChefId])
+            await db.query(`DELETE FROM chefs WHERE id = $1`, [ChefId])
     
             await File.removeDeletedAvatarDB(fileId)
             

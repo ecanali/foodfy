@@ -31,13 +31,12 @@ module.exports = {
     },
 
     async getRecipeImages(recipeId, req) {
-        let results = await Recipe.files(recipeId)
-        const files = results.rows.map(recipe => ({
+        const results = await Recipe.files(recipeId)
+        const files = results.map(recipe => ({
             ...recipe,
             src:`${req.protocol}://${req.headers.host}${recipe.path.replace("public", "")}`
             }))
             
         return files[0]
     }
-
 }

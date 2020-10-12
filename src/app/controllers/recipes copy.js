@@ -3,18 +3,23 @@ const File = require('../models/File')
 const { getRecipeImages } = require('../../lib/utils')
 
 module.exports = {
+
     async index(req, res) {
         try {
             const userSession = req.user
 
-            let recipes
+            let results, recipes
             
             // normal/admin user logic
             if (userSession.is_admin == true) {
-                recipes = await Recipe.all()
+                results = await Recipe.all()
+                recipes = results.rows
             } else {
-                recipes = await Recipe.userRecipes(userSession.id)
+                results = await Recipe.userRecipes(userSession.id)
+                recipes = results.rows
             }
+
+            if (!recipes) res.send('Recipes not found')
 
             const recipesPromise = recipes.map(async recipe => {
                 recipe.img = await getRecipeImages(recipe.id, req)
@@ -33,25 +38,54 @@ module.exports = {
             console.error(error)
         }
     },
+
     async create(req, res) {
         const userSession = req.user
 
-        const chefOptions = await Recipe.chefsSelectOptions()
+        let results = await Recipe.chefsSelectOptions()
+        const options = results.rows
 
-        return res.render('admin/recipes/create', { chefOptions, userSession })
+        return res.render('admin/recipes/create', { chefOptions: options, userSession })
     },
 
     async post(req, res) {
         try {
             const userSession = req.user
+            
+            let results = await Recipe.chefsSelectOptions()
+            const options = results.rows
+
+            // Separa info do Objeto vindo do form por suas Chaves e testa se n veio vazio
+            const keys = Object.keys(req.body)
     
-            const recipeId = await Recipe.create(req.body, userSession.id)
+            for (let key of keys) {
+                if (req.body[key] == "") {
+                    return res.render('admin/recipes/create', { 
+                        chefOptions: options, 
+                        userSession,
+                        recipe: req.body,
+                        error: "Por favor, preencha todos os campos!"
+                    })
+                }
+            }
+
+            if (req.files.length == 0) {
+                return res.render('admin/recipes/create', { 
+                    chefOptions: options, 
+                    userSession,
+                    recipe: req.body,
+                    error: "Por favor, envie no mínimo uma imagem!"
+                })
+            }
+    
+            results = await Recipe.create(req.body, userSession.id)
+            const recipeId = results.rows[0].id
     
             const filesPromise = req.files.map(file => File.create(file))
             const filesResults = await Promise.all(filesPromise)
     
             const recipeFilesPromise = filesResults.map(file => {
-                const fileId = file[0].id
+                const fileId = file.rows[0].id
     
                 File.relateFileDB(fileId, recipeId)
             })
@@ -61,12 +95,15 @@ module.exports = {
             // index render requirements
             let recipes
             
-            // normal/admin user logic
             if (userSession.is_admin == true) {
-                recipes = await Recipe.all()
+                results = await Recipe.all()
+                recipes = results.rows
             } else {
-                recipes = await Recipe.userRecipes(userSession.id)
+                results = await Recipe.userRecipes(userSession.id)
+                recipes = results.rows
             }
+
+            if (!recipes) res.send('Recipes not found')
 
             const recipesPromise = recipes.map(async recipe => {
                 recipe.img = await getRecipeImages(recipe.id, req)
@@ -85,12 +122,13 @@ module.exports = {
         } catch (error) {
             console.error(error)
 
-            const chefOptions = await Recipe.chefsSelectOptions()
+            let results = await Recipe.chefsSelectOptions()
+            const options = results.rows
 
             return res.render('admin/recipes/create', { 
-                chefOptions,
+                chefOptions: options,
                 recipe: req.body, 
-                userSession: req.user, 
+                userSession, 
                 error: "Algum erro aconteceu!"
             })
         }
