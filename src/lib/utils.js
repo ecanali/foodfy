@@ -37,6 +37,6 @@ module.exports = {
             src:`${req.protocol}://${req.headers.host}${recipe.path.replace("public", "")}`
             }))
             
-        return files[0]
+        return files
     }
 }

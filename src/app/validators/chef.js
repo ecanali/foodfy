@@ -14,7 +14,7 @@ function checkAllFields(req) {
 }
 
 function post(req, res, next) {    
-    // check if it has all fields
+        // check if it has all fields
     const fillAllFields = checkAllFields(req)
 
     if (fillAllFields)
