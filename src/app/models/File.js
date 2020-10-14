@@ -6,7 +6,7 @@ const fs = require('fs')
 Base.init({ table: 'files' })
 
 module.exports = {
-    // ...Base,
+    ...Base,
     async create({ filename, path }) {
         try {
             const query = `

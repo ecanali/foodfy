@@ -7,6 +7,7 @@ const File = require('../models/File')
 Base.init({ table: 'chefs' })
 
 module.exports = {
+    ...Base,
     async all() {
         try {
             const results = await db.query(`
@@ -23,29 +24,29 @@ module.exports = {
             console.error(error)
         }
     },
-    async create(data, fileId) {
-        try {
-            const query = `
-                INSERT INTO chefs (
-                    name,
-                    file_id
-                ) VALUES ($1, $2)
-                RETURNING id
-            `
+    // async create(data, fileId) {
+    //     try {
+    //         const query = `
+    //             INSERT INTO chefs (
+    //                 name,
+    //                 file_id
+    //             ) VALUES ($1, $2)
+    //             RETURNING id
+    //         `
     
-            const values = [
-                data.name,
-                fileId
-            ]
+    //         const values = [
+    //             data.name,
+    //             fileId
+    //         ]
 
-            const results = await db.query(query, values)
+    //         const results = await db.query(query, values)
     
-            return results.rows
+    //         return results.rows
 
-        } catch (error) {
-            console.error(error)
-        }
-    },
+    //     } catch (error) {
+    //         console.error(error)
+    //     }
+    // },
 
     async find(id) {
         try {

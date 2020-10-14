@@ -95,8 +95,7 @@ module.exports = {
             console.error(error)
         }
     },
-
-    update(data) {
+    async update(data) {
         try {
             const query = `
                 UPDATE recipes SET
@@ -116,13 +115,15 @@ module.exports = {
                 data.information,
                 data.id
             ]
+
+            const results = await db.query(query, values)
             
-            return db.query(query, values)
+            return results.rows
+
         } catch (error) {
             console.error(error)
         }
     },
-
     async delete(id) {
         await File.delete(id)
 

@@ -58,11 +58,16 @@ module.exports = {
             const filesPromise = req.files.map(file => File.create(file))
 
             const filesResults = await Promise.all(filesPromise)
+
+            const { name } = req.body
     
             const chefFilesPromise = filesResults.map(async file => {
-                const fileId = file[0].id
+                const file_id = file[0].id
     
-                await Chef.create(req.body, fileId)
+                await Chef.create({ 
+                    name,
+                    file_id
+                })
             })
     
             await Promise.all(chefFilesPromise)

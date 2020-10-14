@@ -7,9 +7,9 @@ module.exports = {
         try {
             const userSession = req.user
 
-            let recipes
-            
             // normal/admin user logic
+            let recipes
+
             if (userSession.is_admin == true) {
                 recipes = await Recipe.all()
             } else {
@@ -112,7 +112,6 @@ module.exports = {
             console.error(error)
         }
     },
-
     async edit(req, res) {
         try {
             const userSession = req.user
@@ -142,17 +141,19 @@ module.exports = {
     },
     async put(req, res) {
         try {    
-            const recipeId = req.body.id
-            const filesPromise = req.files.map(file => File.create(file))
-            const filesResults = await Promise.all(filesPromise)
+            if (req.files.length != 0) {
+                const recipeId = req.body.id
+                const filesPromise = req.files.map(file => File.create(file))
+                const filesResults = await Promise.all(filesPromise)
 
-            const recipeFilesPromise = filesResults.map(file => {
-                const fileId = file.rows[0].id
+                const recipeFilesPromise = filesResults.map(file => {
+                    const fileId = file[0].id
 
-                File.relateFileDB(fileId, recipeId)
-            })
+                    File.relateFileDB(fileId, recipeId)
+                })
 
-            await Promise.all(recipeFilesPromise)
+                await Promise.all(recipeFilesPromise)
+            }
     
             if (req.body.removed_files) {
                 const removedFiles = req.body.removed_files.split(",") // [1,2,3,]
@@ -194,30 +195,26 @@ module.exports = {
             })
         }
     },
-
     async delete(req, res) {
         try {
-            const userSession = req.user
-            
             await Recipe.delete(req.body.id)
 
+            const userSession = req.user
+
             // index render requirements
-            let results, recipes
-            
+            // normal/admin user logic
+            let recipes
+
             if (userSession.is_admin == true) {
-                results = await Recipe.all()
-                recipes = results.rows
+                recipes = await Recipe.all()
             } else {
-                results = await Recipe.userRecipes(userSession.id)
-                recipes = results.rows
+                recipes = await Recipe.userRecipes(userSession.id)
             }
 
-            if (!recipes) res.send('Recipes not found')
-
             const recipesPromise = recipes.map(async recipe => {
-                recipeImages = await getRecipeImages(recipe.id, req)
+                const recipeImages = await getRecipeImages(recipe.id, req)
                 recipe.img = recipeImages[0]
-
+                
                 return recipe
             })
     
@@ -233,29 +230,19 @@ module.exports = {
             console.error(error)
 
             // edit render requirements
-            let results = await Recipe.find(req.params.id)
-            const recipe = results.rows[0]
-            
-            if (!recipe) return res.send('Recipe not found!')
+            const recipe = await Recipe.find(req.body.id)
+
+            recipe.img = await getRecipeImages(recipe.id, req)
     
-            // get images
-            results = await Recipe.files(recipe.id)
-            const files = results.rows.map(recipe => ({
-            ...recipe,
-            src:`${req.protocol}://${req.headers.host}${recipe.path.replace("public", "")}`
-            }))
-    
-            results = await Recipe.chefsSelectOptions()
-            const options = results.rows
+            const chefOptions = await Recipe.chefsSelectOptions()
 
             return res.render('admin/recipes/edit', { 
                 recipe, 
-                chefOptions: options, 
-                files, 
-                userSession,
+                chefOptions, 
+                files: recipe.img, 
+                userSession: req.user,
                 error: "Algum erro aconteceu!",
             })
         }
     }
-
 }

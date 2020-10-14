@@ -1,5 +1,8 @@
 const Recipe = require('../models/Recipe')
 
+const { getRecipeImages } = require('../../lib/utils')
+
+
 async function checkAllFields(req) {
     // check if it has all fields
     const keys = Object.keys(req.body)
@@ -23,12 +26,15 @@ async function checkAllFieldsAndFiles(req) {
     const keys = Object.keys(req.body)
 
     for (let key of keys) {
-        if (req.body[key] == "" && key != "removed_files" && req.files.length == 0) {
+        if (req.body[key] == "" && key != "removed_files") {
             const chefOptions = await Recipe.chefsSelectOptions()
+            const recipe = req.body
+            recipe.img = await getRecipeImages(recipe.id, req)
 
             return {
                 chefOptions,
-                recipe: req.body,
+                recipe,
+                files: recipe.img,
                 error: "Por favor, preencha todos os campos.",
                 userSession: req.user
             }
@@ -59,21 +65,10 @@ async function post(req, res, next) {
 
 async function update(req, res, next) {
     // check if it has all fields
-    const fillAllFieldsAndFiles = await checkAllFieldsAndFiles(req)
+        const fillAllFieldsAndFiles = await checkAllFieldsAndFiles(req)
 
     if (fillAllFieldsAndFiles)
         return res.render('admin/recipes/edit', fillAllFieldsAndFiles)
-
-    if (req.files.length == 0) {
-        const chefOptions = await Recipe.chefsSelectOptions()
-
-        return res.render('admin/recipes/edit', { 
-            chefOptions, 
-            userSession: req.user,
-            recipe: req.body,
-            error: "Por favor, envie no mínimo uma imagem!"
-        })
-    }
 
     next()
 }
