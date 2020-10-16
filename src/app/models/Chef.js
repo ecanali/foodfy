@@ -80,41 +80,41 @@ module.exports = {
         }
     },
 
-    async update(data, fileId) {
-        try {
-            const query = `
-                UPDATE chefs SET
-                    name = ($1),
-                    file_id = ($2)
-                WHERE id = $3
-            `
+    // async update(data, fileId) {
+    //     try {
+    //         const query = `
+    //             UPDATE chefs SET
+    //                 name = ($1),
+    //                 file_id = ($2)
+    //             WHERE id = $3
+    //         `
     
-            const values = [
-                data.name,
-                fileId,
-                data.id
-            ]
+    //         const values = [
+    //             data.name,
+    //             fileId,
+    //             data.id
+    //         ]
 
-            const results = await db.query(query, values)
+    //         const results = await db.query(query, values)
             
-            return results.rows
+    //         return results.rows
 
-        } catch (error) {
-            console.error(error)
-        }
-    },
+    //     } catch (error) {
+    //         console.error(error)
+    //     }
+    // },
 
-    async delete(ChefId, fileId) {
-        try {
-            await db.query(`DELETE FROM chefs WHERE id = $1`, [ChefId])
+    // async delete(ChefId, fileId) {
+    //     try {
+    //         await db.query(`DELETE FROM chefs WHERE id = $1`, [ChefId])
     
-            await File.removeDeletedAvatarDB(fileId)
+    //         await File.removeDeletedAvatarDB(fileId)
             
-            return
-        } catch (error) {
-            console.error(error)
-        }
-    },
+    //         return
+    //     } catch (error) {
+    //         console.error(error)
+    //     }
+    // },
     async files(fileId) {
         try {
             const results = await db.query(`

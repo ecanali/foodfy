@@ -50,7 +50,24 @@ function update(req, res, next) {
     next()
 }
 
+async function hasRecipes(req, res, next) {
+    // does not allow chef deletion if a recipe in his/her name
+    if (req.body.totalRecipes > 0) {
+        const chefImage = { src: req.body.image_src }
+        
+        return res.render('admin/chefs/edit', {
+            error: "Erro ao deletar, chef não pode ter receitas em seu nome!",
+            chef: req.body,
+            chefImage,
+            userSession: req.user
+        })
+    }
+
+    next()
+}
+
 module.exports = {
     post,
-    update
+    update,
+    hasRecipes
 }

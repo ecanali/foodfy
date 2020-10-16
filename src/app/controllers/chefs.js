@@ -25,8 +25,6 @@ async function getRecipeImage(recipeId, req) {
 module.exports = {
     async index(req, res) {
         try {
-            const userSession = req.user
-
             const chefs = await Chef.all()
 
             const chefsPromise = chefs.map(async chef => {
@@ -39,7 +37,7 @@ module.exports = {
             
             return res.render('admin/chefs/index', { 
                 chefs: lastAdded, 
-                userSession 
+                userSession: req.user 
             })
             
         } catch (error) {
@@ -53,19 +51,15 @@ module.exports = {
     },
     async post(req, res) {
         try {
-            const userSession = req.user
-    
             const filesPromise = req.files.map(file => File.create(file))
 
             const filesResults = await Promise.all(filesPromise)
 
-            const { name } = req.body
-    
             const chefFilesPromise = filesResults.map(async file => {
                 const file_id = file[0].id
     
                 await Chef.create({ 
-                    name,
+                    name: req.body.name,
                     file_id
                 })
             })
@@ -83,7 +77,10 @@ module.exports = {
     
             const lastAdded = await Promise.all(chefsPromise)
             
-            return res.render('admin/chefs/index', { chefs: lastAdded, userSession })
+            return res.render('admin/chefs/index', { 
+                chefs: lastAdded, 
+                userSession: req.user 
+            })
             
         } catch (error) {
             console.error(error)
@@ -135,16 +132,17 @@ module.exports = {
     },
     async put(req, res) {
         try {
-            const userSession = req.user
-        
             const oldFileId = req.body.file_id
             const filesPromise = req.files.map(file => File.create(file))
             const filesResults = await Promise.all(filesPromise)
 
             const chefFilesPromise = filesResults.map(async file => {
-                const newFileId = file[0].id
+                const file_id = file[0].id
 
-                await Chef.update(req.body, newFileId)
+                await Chef.update(req.body.id, {
+                    name: req.body.name,
+                    file_id
+                })
 
                 File.removeDeletedAvatarDB(oldFileId)
             })
@@ -170,7 +168,7 @@ module.exports = {
                 recipes: recipeImages, 
                 chef, 
                 chefImage, 
-                userSession,
+                userSession: req.user,
                 success: "Chef atualizado com sucesso!"
             })
             
@@ -188,23 +186,11 @@ module.exports = {
         }
     },
     async delete(req, res) {        
-        try {
-            const userSession = req.user
+        try {           
+            await Chef.delete(req.body.id)
 
-            // does not allow chef deletion if a recipe in his/her name
-            if (req.body.totalRecipes > 0) {
-                const chefImage = await getChefImage(req.body.id, req)
-                
-                return res.render('admin/chefs/edit', {
-                    error: "Erro ao deletar, chef não pode ter receitas em seu nome!",
-                    chef: req.body,
-                    chefImage,
-                    userSession
-                })
-            }
+            await File.removeDeletedAvatarDB(req.body.file_id)
 
-            await Chef.delete(req.body.id, req.body.file_id)
-            
             // index render requirements
             const chefs = await Chef.all()
 
@@ -219,7 +205,7 @@ module.exports = {
             return res.render('admin/chefs/index', { 
                 chefs: lastAdded, 
                 success: "Chef deletado com sucesso!",
-                userSession
+                userSession: req.user
             })
             
         } catch (error) {

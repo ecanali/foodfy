@@ -2,7 +2,6 @@ const Recipe = require('../models/Recipe')
 
 const { getRecipeImages } = require('../../lib/utils')
 
-
 async function checkAllFields(req) {
     // check if it has all fields
     const keys = Object.keys(req.body)

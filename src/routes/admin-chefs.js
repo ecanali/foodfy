@@ -15,6 +15,6 @@ routes.get('/:id/edit', onlyUsers, UserValidator.isAdmin, chefs.edit)
 
 routes.post('/', multer.array('photos', 1), onlyUsers, UserValidator.isAdmin, ChefValidator.post, chefs.post)
 routes.put('/', multer.array('photos', 1), onlyUsers, UserValidator.isAdmin, ChefValidator.update, chefs.put)
-routes.delete('/', onlyUsers, UserValidator.isAdmin, chefs.delete)
+routes.delete('/', onlyUsers, UserValidator.isAdmin, ChefValidator.hasRecipes, chefs.delete)
 
 module.exports = routes

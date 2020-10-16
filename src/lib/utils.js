@@ -1,7 +1,7 @@
 const Recipe = require('../app/models/Recipe')
+const Chef = require('../app/models/Chef')
 
 module.exports = {
-
     date(timestamp) {
         // pega a data mas em formato 'local'
         const date = new Date(timestamp)
@@ -29,7 +29,6 @@ module.exports = {
             format: `${day}/${month}/${year}`
         }
     },
-
     async getRecipeImages(recipeId, req) {
         const results = await Recipe.files(recipeId)
         const files = results.map(recipe => ({
@@ -38,5 +37,14 @@ module.exports = {
             }))
             
         return files
+    },
+    async getChefImage(chefId, req) {
+        const results = await Chef.filesByChefId(chefId)
+        const files = results.map(chef => ({
+            ...chef,
+            src:`${req.protocol}://${req.headers.host}${chef.path.replace("public", "")}`
+            }))
+            
+        return files[0]
     }
 }
