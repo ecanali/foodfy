@@ -1,5 +1,6 @@
 const Recipe = require('../models/Recipe')
 const File = require('../models/File')
+
 const { getRecipeImages } = require('../../lib/utils')
 
 module.exports = {
@@ -35,26 +36,42 @@ module.exports = {
         }
     },
     async create(req, res) {
-        const userSession = req.user
-
         const chefOptions = await Recipe.chefsSelectOptions()
 
-        return res.render('admin/recipes/create', { chefOptions, userSession })
+        return res.render('admin/recipes/create', { 
+            chefOptions, 
+            userSession: req.user 
+        })
     },
     async post(req, res) {
         try {
             const userSession = req.user
     
-            const recipeId = await Recipe.create(req.body, userSession.id)
-    
-            const filesPromise = req.files.map(file => File.create(file))
-            const filesResults = await Promise.all(filesPromise)
-    
-            const recipeFilesPromise = filesResults.map(file => {
-                const fileId = file[0].id
-    
-                File.relateFileDB(fileId, recipeId)
+            // console.log(req.body)
+
+            // const recipeId = await Recipe.create(req.body, userSession.id)
+
+            const recipeId = await Recipe.create({
+                chef_id: req.body.chef,
+                title: req.body.title,
+                ingredients: req.body.ingredients,
+                preparation: req.body.preparation,
+                information: req.body.information,
+                user_id: userSession.id
             })
+
+            const filesPromise = req.files.map(file => 
+                File.create({ 
+                    name: file.filename,
+                    path: file.path
+                })
+            )
+
+            const filesResults = await Promise.all(filesPromise)
+
+            const recipeFilesPromise = filesResults.map(fileId =>
+                File.relateFileDB(fileId, recipeId)
+            )
     
             await Promise.all(recipeFilesPromise)
 

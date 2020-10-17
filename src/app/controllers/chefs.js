@@ -1,26 +1,9 @@
+const { unlinkSync } = require('fs')
+
 const Chef = require('../models/Chef')
-const Recipe = require('../models/Recipe')
 const File = require('../models/File')
 
-async function getChefImage(chefId, req) {
-    const results = await Chef.filesByChefId(chefId)
-    const files = results.map(chef => ({
-        ...chef,
-        src:`${req.protocol}://${req.headers.host}${chef.path.replace("public", "")}`
-        }))
-        
-    return files[0]
-}
-
-async function getRecipeImage(recipeId, req) {
-    const results = await Recipe.files(recipeId)
-    const files = results.map(recipe => ({
-        ...recipe,
-        src:`${req.protocol}://${req.headers.host}${recipe.path.replace("public", "")}`
-        }))
-        
-    return files[0]
-}
+const { getChefImage, getRecipeImages } = require('../../lib/utils')
 
 module.exports = {
     async index(req, res) {
@@ -51,21 +34,20 @@ module.exports = {
     },
     async post(req, res) {
         try {
-            const filesPromise = req.files.map(file => File.create(file))
+            const filesPromise = req.files.map(file => 
+                File.create({ 
+                    name: file.filename,
+                    path: file.path
+                })
+            )
 
             const filesResults = await Promise.all(filesPromise)
 
-            const chefFilesPromise = filesResults.map(async file => {
-                const file_id = file[0].id
-    
-                await Chef.create({ 
-                    name: req.body.name,
-                    file_id
-                })
+            await Chef.create({ 
+                name: req.body.name,
+                file_id: filesResults[0]
             })
-    
-            await Promise.all(chefFilesPromise)
-    
+        
             // index render requirements
             const chefs = await Chef.all()
 
@@ -93,9 +75,7 @@ module.exports = {
         }
     },
     async show(req, res) {
-        try {
-            const userSession = req.user
-        
+        try {        
             const chef = await Chef.find(req.params.id)
 
             const chefImage = await getChefImage(req.params.id, req)
@@ -103,14 +83,20 @@ module.exports = {
             const recipes = await Chef.chefRecipesList(req.params.id)
     
             const recipesPromise = recipes.map(async recipe => {
-                recipe.img = await getRecipeImage(recipe.id, req)
-    
+                const recipeImages = await getRecipeImages(recipe.id, req)
+                recipe.img = recipeImages[0]
+                    
                 return recipe
             })
     
             const recipeImages = await Promise.all(recipesPromise)
 
-            return res.render('admin/chefs/chef', { recipes: recipeImages, chef, chefImage, userSession })
+            return res.render('admin/chefs/chef', { 
+                recipes: recipeImages, 
+                chef, 
+                chefImage, 
+                userSession: req.user
+            })
             
         } catch (error) {
             console.error(error)
@@ -118,13 +104,15 @@ module.exports = {
     },
     async edit(req, res) {   
         try {
-            const userSession = req.user
-
             const chef = await Chef.find(req.params.id)
     
             const chefImage = await getChefImage(req.params.id, req)
     
-            return res.render('admin/chefs/edit', { chef, chefImage, userSession })
+            return res.render('admin/chefs/edit', { 
+                chef, 
+                chefImage, 
+                userSession: req.user
+            })
 
         } catch (error) {
             console.error(error)
@@ -132,23 +120,34 @@ module.exports = {
     },
     async put(req, res) {
         try {
-            const oldFileId = req.body.file_id
-            const filesPromise = req.files.map(file => File.create(file))
-            const filesResults = await Promise.all(filesPromise)
+            if (req.files.length != 0) {
+                const filesPromise = req.files.map(file => 
+                    File.create({ 
+                        name: file.filename,
+                        path: file.path
+                    })
+                )
 
-            const chefFilesPromise = filesResults.map(async file => {
-                const file_id = file[0].id
+                const filesResults = await Promise.all(filesPromise)
 
                 await Chef.update(req.body.id, {
                     name: req.body.name,
-                    file_id
+                    file_id: filesResults[0]
                 })
+    
+                // remove old file from db and assets
+                const oldFile = await File.find(req.body.file_id)
+                
+                File.delete(oldFile.id)
+        
+                unlinkSync(oldFile.path)
 
-                File.removeDeletedAvatarDB(oldFileId)
-            })
+            } else {
+                await Chef.update(req.body.id, {
+                    name: req.body.name
+                })
+            }
 
-            await Promise.all(chefFilesPromise)
-            
             // show render requirements
             const chef = await Chef.find(req.body.id)
 
@@ -157,7 +156,8 @@ module.exports = {
             const recipes = await Chef.chefRecipesList(req.body.id)
     
             const recipesPromise = recipes.map(async recipe => {
-                recipe.img = await getRecipeImage(recipe.id, req)
+                const recipeImages = await getRecipeImages(recipe.id, req)
+                recipe.img = recipeImages[0]
     
                 return recipe
             })
@@ -189,7 +189,12 @@ module.exports = {
         try {           
             await Chef.delete(req.body.id)
 
-            await File.removeDeletedAvatarDB(req.body.file_id)
+            // remove old file from db and assets
+            const oldFile = await File.find(req.body.file_id)
+                
+            File.delete(oldFile.id)
+    
+            unlinkSync(oldFile.path)
 
             // index render requirements
             const chefs = await Chef.all()

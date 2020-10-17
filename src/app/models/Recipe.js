@@ -1,11 +1,11 @@
-const Base = require('./Base')
-
 const db = require('../../config/db')
 const File = require('../models/File')
 
+const Base = require('./Base')
 Base.init({ table: 'recipes' })
 
 module.exports = {
+    ...Base,
     async all() {
         try {
             const results = await db.query(`
@@ -21,37 +21,37 @@ module.exports = {
             console.error(error)
         }
     },
-    async create(data, userId) {
-        try {
-            const query = `
-                INSERT INTO recipes (
-                    chef_id,
-                    title,
-                    ingredients,
-                    preparation,
-                    information,
-                    user_id
-                ) VALUES ($1, $2, $3, $4, $5, $6)
-                RETURNING id
-            `
+    // async create(data, userId) {
+    //     try {
+    //         const query = `
+    //             INSERT INTO recipes (
+    //                 chef_id,
+    //                 title,
+    //                 ingredients,
+    //                 preparation,
+    //                 information,
+    //                 user_id
+    //             ) VALUES ($1, $2, $3, $4, $5, $6)
+    //             RETURNING id
+    //         `
             
-            const values = [
-                data.chef,
-                data.title,
-                data.ingredients,
-                data.preparation,
-                data.information,
-                userId
-            ]
+    //         const values = [
+    //             data.chef,
+    //             data.title,
+    //             data.ingredients,
+    //             data.preparation,
+    //             data.information,
+    //             userId
+    //         ]
 
-            const results = await db.query(query, values)
+    //         const results = await db.query(query, values)
     
-            return results.rows[0].id
+    //         return results.rows[0].id
 
-        } catch (error) {
-            console.error(error)
-        }
-    },
+    //     } catch (error) {
+    //         console.error(error)
+    //     }
+    // },
 
     async chefsSelectOptions() {
         try {
@@ -91,6 +91,7 @@ module.exports = {
             `, [userId])
 
             return results.rows
+
         } catch (error) {
             console.error(error)
         }

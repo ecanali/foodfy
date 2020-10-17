@@ -38,15 +38,6 @@ function update(req, res, next) {
         return res.render('admin/chefs/edit', fillAllFields)
     }
 
-    // console.log(req)
-
-    // if (req.files.length == 0 || req.body.file_id == "")
-    //     return res.render('admin/chefs/edit', {
-    //         error: "Por favor envie uma imagem!",
-    //         chef: req.body,
-    //         userSession: req.user
-    //     })
-
     next()
 }
 
