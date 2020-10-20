@@ -1,3 +1,5 @@
+const { unlinkSync } = require('fs')
+
 const Recipe = require('../models/Recipe')
 const File = require('../models/File')
 
@@ -47,15 +49,11 @@ module.exports = {
         try {
             const userSession = req.user
     
-            // console.log(req.body)
-
-            // const recipeId = await Recipe.create(req.body, userSession.id)
-
             const recipeId = await Recipe.create({
                 chef_id: req.body.chef,
                 title: req.body.title,
-                ingredients: req.body.ingredients,
-                preparation: req.body.preparation,
+                ingredients: `{${req.body.ingredients}}`,
+                preparation: `{${req.body.preparation}}`,
                 information: req.body.information,
                 user_id: userSession.id
             })
@@ -159,15 +157,18 @@ module.exports = {
     async put(req, res) {
         try {    
             if (req.files.length != 0) {
-                const recipeId = req.body.id
-                const filesPromise = req.files.map(file => File.create(file))
+                const filesPromise = req.files.map(file => 
+                    File.create({ 
+                        name: file.filename,
+                        path: file.path
+                    })
+                )
+
                 const filesResults = await Promise.all(filesPromise)
 
-                const recipeFilesPromise = filesResults.map(file => {
-                    const fileId = file[0].id
-
-                    File.relateFileDB(fileId, recipeId)
-                })
+                const recipeFilesPromise = filesResults.map(fileId =>
+                    File.relateFileDB(fileId, req.body.id)
+                )
 
                 await Promise.all(recipeFilesPromise)
             }
@@ -177,7 +178,15 @@ module.exports = {
                 const lastIndex = removedFiles.length - 1
                 removedFiles.splice(lastIndex, 1) // [1,2,3]
     
-                const removedFilesPromise = removedFiles.map(id => File.removeDeletedFileFromPUT(id))
+                const removedFilesPromise = removedFiles.map(async fileId => {
+                    const oldFile = await File.find(fileId)
+                    
+                    unlinkSync(oldFile.path)
+
+                    File.delete(fileId)
+
+                    File.removeFromRecipeFilesDB(fileId)
+                })
     
                 await Promise.all(removedFilesPromise)
             }

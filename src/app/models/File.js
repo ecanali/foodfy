@@ -31,7 +31,7 @@ module.exports = {
     //     }
     // },
 
-    relateFileDB(fileId, recipeId) {
+    async relateFileDB(fileId, recipeId) {
         try {
             const query = `
                 INSERT INTO recipe_files (
@@ -46,7 +46,8 @@ module.exports = {
                 fileId
             ]
     
-            return db.query(query, values)
+            return await db.query(query, values)
+
         } catch (error) {
             console.error(error)  
         }
@@ -77,26 +78,36 @@ module.exports = {
     //     }
     // },
 
-    async removeDeletedFileFromPUT(id) {
-        try {
-            let results = await db.query(`
-                SELECT files.*
-                FROM files
-                LEFT JOIN recipe_files ON (files.id = recipe_files.file_id)
-                LEFT JOIN recipes ON (recipe_files.recipe_id = recipes.id)
-                WHERE files.id = $1
-            `, [id])
+    // async removeDeletedFileFromPUT(id) {
+    //     try {
+    //         let results = await db.query(`
+    //             SELECT files.*
+    //             FROM files
+    //             LEFT JOIN recipe_files ON (files.id = recipe_files.file_id)
+    //             LEFT JOIN recipes ON (recipe_files.recipe_id = recipes.id)
+    //             WHERE files.id = $1
+    //         `, [id])
 
-            const files = results.rows
-            files.map(file => {
-                fs.unlinkSync(file.path)
-                db.query(`
-                    DELETE FROM recipe_files WHERE file_id = $1 
-                `, [file.id], (err) => {
-                    if (err) throw new Error(err)
-                        return db.query(`DELETE FROM files WHERE id = $1`, [file.id])
-                })
-            })
+    //         const files = results.rows
+    //         files.map(file => {
+    //             fs.unlinkSync(file.path)
+    //             db.query(`
+    //                 DELETE FROM recipe_files WHERE file_id = $1 
+    //             `, [file.id], (err) => {
+    //                 if (err) throw new Error(err)
+    //                     return db.query(`DELETE FROM files WHERE id = $1`, [file.id])
+    //             })
+    //         })
+    //     } catch (error) {
+    //         console.error(error)
+    //     }
+    // },
+    removeFromRecipeFilesDB(id) {
+        try {
+            return db.query(`
+                DELETE FROM recipe_files WHERE file_id = $1 
+            `, [id])
+            
         } catch (error) {
             console.error(error)
         }
