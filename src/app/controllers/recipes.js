@@ -191,7 +191,13 @@ module.exports = {
                 await Promise.all(removedFilesPromise)
             }
     
-            await Recipe.update(req.body)
+            await Recipe.update(req.body.id, {
+                chef_id: req.body.chef,
+                title: req.body.title,
+                ingredients: `{${req.body.ingredients}}`,
+                preparation: `{${req.body.preparation}}`,
+                information: req.body.information
+            })
             
             // show render requirements
             const recipe = await Recipe.find(req.body.id)
@@ -223,6 +229,18 @@ module.exports = {
     },
     async delete(req, res) {
         try {
+            const recipeFiles = await Recipe.files(req.body.id)
+
+            const removedFilesPromise = recipeFiles.map(async file => {
+                await File.removeFromRecipeFilesDB(file.id)
+                
+                File.delete(file.id)
+
+                unlinkSync(file.path)
+            })
+
+            await Promise.all(removedFilesPromise)
+
             await Recipe.delete(req.body.id)
 
             const userSession = req.user
@@ -257,9 +275,7 @@ module.exports = {
 
             // edit render requirements
             const recipe = await Recipe.find(req.body.id)
-
             recipe.img = await getRecipeImages(recipe.id, req)
-    
             const chefOptions = await Recipe.chefsSelectOptions()
 
             return res.render('admin/recipes/edit', { 
