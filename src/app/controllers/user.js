@@ -1,30 +1,32 @@
+const { unlinkSync } = require('fs')
 const { hash } = require('bcryptjs')
+const crypto = require('crypto')
 
 const User = require('../models/User')
-const crypto = require('crypto')
+const Recipe = require('../models/Recipe')
+const File = require('../models/File')
+
 const mailer = require('../../lib/mailer')
 
 module.exports = {
     async list(req, res) {
         try {
-            const userSession = req.user
-
             const users = await User.findAll()
             
-            return res.render('admin/users/list', { users, userSession })
+            return res.render('admin/users/list', { 
+                users, 
+                userSession: req.user 
+            })
             
         } catch (error) {
             console.error(error)
         }
     },
     create(req, res) {
-        const userSession = req.user
-
-        return res.render('admin/users/create', { userSession })
+        return res.render('admin/users/create', { userSession: req.user })
     },
     async post(req, res) {
         try {
-            const userSession = req.user
             const { name, email, isAdmin } = req.body
     
             // create random password
@@ -56,28 +58,25 @@ module.exports = {
     
             return res.render('admin/users/list', {
                 users,
-                userSession,
+                userSession: req.user,
                 success: "Usuário cadastrado com sucesso! Senha enviada para o e-mail informado."
             })
             
         } catch (error) {
             console.error(error)
 
-            const userSession = req.user
-
             return res.render('admin/users/create', {
                 user: req.body,
-                userSession,
+                userSession: req.user,
                 error: "Erro ao tentar cadastrar o usuário!"
             })
         }
     },
     async edit(req, res) {    
         try {
-            const userSession = req.user
             const user = await User.find(req.params.id)
     
-            return res.render('admin/users/edit', { user, userSession })
+            return res.render('admin/users/edit', { user, userSession: req.user })
             
         } catch (error) {
             console.error(error)
@@ -85,7 +84,6 @@ module.exports = {
     },
     async put(req, res) {
         try {
-            const userSession = req.user
             let { name, email, isAdmin, id } = req.body
     
             await User.update(id, {
@@ -97,7 +95,7 @@ module.exports = {
             const user = await User.find(id)
     
             return res.render('admin/users/edit', {
-                userSession,
+                userSession: req.user,
                 user,
                 success: "Conta atualizada com sucesso!",
             })
@@ -105,18 +103,34 @@ module.exports = {
         } catch (error) {
             console.error(error)
 
-            const userSession = req.user
-
             return res.render('admin/users/edit', {
                 error: "Algum erro aconteceu!",
                 user: req.body,
-                userSession
+                userSession: req.user
             })
         }
     },
     async delete(req, res) {
-        try {
-            const userSession = req.user
+        try {            
+            const userRecipes = await Recipe.userRecipes(req.body.id)
+
+            const deleteAllFromEachRecipePromise = userRecipes.map(async recipe => {
+                const recipeFiles = await Recipe.files(recipe.id)
+
+                const deleteFilesPromise = recipeFiles.map(async file => {
+                    await File.removeFromRecipeFilesDB(file.id)
+                    
+                    File.delete(file.id)
+    
+                    unlinkSync(file.path)
+                })
+    
+                await Promise.all(deleteFilesPromise)
+
+                await Recipe.delete(recipe.id)
+            })
+
+            await Promise.all(deleteAllFromEachRecipePromise)
             
             await User.delete(req.body.id)
 
@@ -125,20 +139,18 @@ module.exports = {
             return res.render('admin/users/list', {
                 success: "Usuário deletado com sucesso!",
                 users,
-                userSession
+                userSession: req.user
             })
 
         } catch(err) {
             console.error(err)
-
-            const userSession = req.user
 
             const users = await User.findAll()
 
             return res.render('admin/users/list', {
                 users,
                 error: "Erro ao tentar excluir o usuário!",
-                userSession
+                userSession: req.user
             })
         }
     }

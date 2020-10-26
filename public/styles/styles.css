@@ -265,10 +265,16 @@ h2.h2-site {
 }
 
 /* RECEITAS */
-.recipes {
+main.recipes {
     width: 940px;
     margin-bottom: 400px;
+    display: flex;
 }
+
+.filtered-title {
+    align-self: flex-start;
+}
+
 
 /* MODAL */
 .recipes-modal-shadow {
