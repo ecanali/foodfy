@@ -9,3 +9,15 @@
         {{ success }}
     </div>
 {% endif %}
+
+{% if recipePostPutSuccess %}
+    <div class="messages success" id="post-put-success-lottie">
+        {{ recipePostPutSuccess }}
+    </div>
+{% endif %}
+
+{% if recipeDeleteSuccess %}
+    <div class="messages success" id="delete-success-lottie">
+        {{ recipeDeleteSuccess }}
+    </div>
+{% endif %}

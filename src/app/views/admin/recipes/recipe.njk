@@ -65,4 +65,19 @@
             </div>
         </div>
     </main>
+
+    <script src="/lottie.min.js"></script>
+    
+    <script>
+        const element = document.querySelector('#post-put-success-lottie')
+        
+        lottie.loadAnimation({
+            container: element, // the dom element that will contain the animation
+            renderer: 'svg',
+            loop: false,
+            autoplay: true,
+            path: '/25516-cooking.json' // the path to the animation json
+        }).setSpeed(1)
+    </script>
+
 {% endblock content %}

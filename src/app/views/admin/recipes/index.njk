@@ -28,4 +28,27 @@
 
         </div>
     </section>
+
+        <script src="/lottie.min.js"></script>
+    
+    <script>
+        const deleteElement = document.querySelector('#delete-success-lottie')
+        lottie.loadAnimation({
+            container: deleteElement, // the dom element that will contain the animation
+            renderer: 'svg',
+            loop: false,
+            autoplay: true,
+            path: '/6174-dustbin.json' // the path to the animation json
+        }).setSpeed(0.25)
+
+        const postElement = document.querySelector('#post-put-success-lottie')
+        lottie.loadAnimation({
+            container: postElement, // the dom element that will contain the animation
+            renderer: 'svg',
+            loop: false,
+            autoplay: true,
+            path: '/25516-cooking.json' // the path to the animation json
+        }).setSpeed(1)
+    </script>
+
 {% endblock content %}

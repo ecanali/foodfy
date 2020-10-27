@@ -95,7 +95,7 @@ module.exports = {
             return res.render('admin/recipes/index', { 
                 recipes: lastAdded, 
                 userSession,
-                success: "Receita cadastrada com sucesso!"
+                recipePostPutSuccess: "Receita cadastrada com sucesso!"
             })
 
         } catch (error) {
@@ -207,7 +207,7 @@ module.exports = {
             return res.render('admin/recipes/recipe', { 
                 recipe, 
                 files: recipe.img, 
-                success: "Receita atualizada com sucesso!",
+                recipePostPutSuccess: "Receita atualizada com sucesso!",
                 userSession: req.user
             })
 
@@ -267,7 +267,7 @@ module.exports = {
             return res.render('admin/recipes/index', { 
                 recipes: lastAdded, 
                 userSession,
-                success: "Receita deletada com sucesso!",
+                recipeDeleteSuccess: "Receita deletada com sucesso!",
             })
                         
         } catch (error) {
