@@ -181,11 +181,12 @@ module.exports = {
                 const removedFilesPromise = removedFiles.map(async fileId => {
                     const oldFile = await File.find(fileId)
                     
-                    unlinkSync(oldFile.path)
+                    if (!oldFile.path.includes("recipe-placeholder"))
+                        unlinkSync(oldFile.path)
+                        
+                    File.removeFromRecipeFilesDB(fileId)
 
                     File.delete(fileId)
-
-                    File.removeFromRecipeFilesDB(fileId)
                 })
     
                 await Promise.all(removedFilesPromise)
@@ -236,7 +237,8 @@ module.exports = {
                 
                 File.delete(file.id)
 
-                unlinkSync(file.path)
+                if (!file.path.includes("recipe-placeholder"))
+                    unlinkSync(file.path)
             })
 
             await Promise.all(removedFilesPromise)

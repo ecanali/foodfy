@@ -140,7 +140,8 @@ module.exports = {
                 
                 File.delete(oldFile.id)
         
-                unlinkSync(oldFile.path)
+                if (!oldFile.path.includes("chef-placeholder"))
+                    unlinkSync(oldFile.path)
 
             } else {
                 await Chef.update(req.body.id, {
@@ -193,8 +194,11 @@ module.exports = {
             const oldFile = await File.find(req.body.file_id)
                 
             File.delete(oldFile.id)
-    
-            unlinkSync(oldFile.path)
+
+            // const pathString = oldFile.path
+
+            if (!oldFile.path.includes("chef-placeholder"))
+                unlinkSync(oldFile.path)
 
             // index render requirements
             const chefs = await Chef.all()

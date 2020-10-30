@@ -6,11 +6,12 @@ const Chef = require('./src/app/models/Chef')
 const File = require('./src/app/models/File')
 const Recipe = require('./src/app/models/Recipe')
 
-let usersIds = []
-let chefsIds = []
-let totalUsers = 2
-let totalChefs = 2
-let totalRecipes = 2
+let usersIds = [],
+    chefsIds = [],
+    totalUsers = 2,
+    totalChefs = 2,
+    totalRecipes = 3,
+    totalRecipesImages = 9
 
 async function createUsers() {
     const users = []
@@ -30,15 +31,13 @@ async function createUsers() {
     usersIds = await Promise.all(usersPromise)
 }
 
-// createUsers()
-
 async function createChefs() {
     let chefs = []
 
     while (chefs.length < totalChefs) {
         const fileId = await File.create({
             name: faker.image.image(),
-            path: `public/assets/chef-placeholder.jpeg`
+            path: `public/assets/chef-placeholder${Math.ceil(Math.random() * 6)}.jpeg`
         })
 
         chefs.push({
@@ -51,8 +50,6 @@ async function createChefs() {
 
     chefsIds = await Promise.all(chefsPromise)
 }
-
-// createChefs()
 
 async function createRecipes() {
     let recipes = []
@@ -72,25 +69,23 @@ async function createRecipes() {
 
     let recipesIds = await Promise.all(recipesPromise)
     
-///// CRIAR LÓGICA DE CRIAR TODOS ARQUIVOS NA DB, DEPOIS CRIAR A RELAÇÃO ALEATORIA ENTRE IDS DAS RECIPES E FILES CRIADOS PRAS IMAGENS DAS RECEITAS!
+    let files = []
 
-    // let files = []
+    while (files.length < totalRecipesImages) {
+        files.push({
+            name: faker.image.image(),
+            path: `public/assets/recipe-placeholder${Math.ceil(Math.random() * 6)}.png`
+        })
+    }
 
-    // while (files.length < 2) {
-    //     files.push({
-    //         name: faker.image.image(),
-    //         path: `public/images/placeholder.png`,
-    //         product_id: productsIds[Math.floor(Math.random() * totalProducts)]
-    //     })
-    // }
+    const filesPromise = files.map(async file => {
+        const fileId = await File.create(file)
 
-    // const filesPromise = files.map(file => File.create(file))
+        await File.relateFileDB(fileId, recipesIds[Math.floor(Math.random() * totalRecipes)])
+    })
 
-    // await Promise.all(filesPromise)
+    await Promise.all(filesPromise)
 }
-
-// createRecipes()
-
 
 async function init() {
     await createUsers()

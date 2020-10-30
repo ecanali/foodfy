@@ -122,7 +122,8 @@ module.exports = {
                     
                     File.delete(file.id)
     
-                    unlinkSync(file.path)
+                    if (!file.path.includes("recipe-placeholder"))
+                        unlinkSync(file.path)
                 })
     
                 await Promise.all(deleteFilesPromise)
