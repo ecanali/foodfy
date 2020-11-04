@@ -13,6 +13,12 @@
     text-decoration: none;
 }
 
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
 .content {
     max-width: 70%;
     min-width: 940px;
@@ -53,6 +59,7 @@ header nav {
 
 header nav a:first-child {
     margin-right: 120px;
+    align-self: flex-end;
 }
 
 header nav a {
@@ -94,7 +101,7 @@ header nav a {
     grid-template-columns: 1fr 90px;
     align-items: center;
     grid-gap: 8px;
-    margin-left: 74px;
+    margin-left: 73px;
 }
 
 .home-filter input {
@@ -157,7 +164,11 @@ header nav a {
 
 .desenho-chef {
     margin-right: 40px;
-    margin-top: auto;
+    margin-top: 100px;
+}
+
+.desenho-chef img {
+    min-height: 300px;
 }
 
 
@@ -181,6 +192,14 @@ section h2 {
     grid-template-columns: 1fr 1fr 1fr;
     gap: 30px 20px;
     margin-bottom: 50px;
+}
+
+.recipes .grid-receitas {
+    max-width: 940px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 30px 20px;
+    margin: 20px auto 50px;
 }
 
 h2.h2-site {
@@ -226,18 +245,22 @@ h2.h2-site {
 
 
 /* RODAPÉ */
+footer {
+    margin-top: auto;
+}
+
 .rodape {
     background-color: #EEEEEE;
     text-align: center;
     padding: 20px;
     font-size: 14px;
     color: #999999;
-    margin-top: 0px;
 }
 
 /* SOBRE */
 .about {
     max-width: 940px;
+    display: flex;
 }
 
 .about h2 {
@@ -247,6 +270,7 @@ h2.h2-site {
     color: var(--titles-color); 
     margin-top: 20px;
     margin-bottom: 20px;
+    align-self: flex-start;
 }
 
 .about h3 {
@@ -255,6 +279,7 @@ h2.h2-site {
     line-height: 24px;
     color: var(--titles-color);
     margin-bottom: 20px;
+    align-self: flex-start;
 }
 
 .about p {
@@ -264,10 +289,14 @@ h2.h2-site {
     margin-bottom: 30px;
 }
 
+.about p:last-child {
+    margin-bottom: 50px;
+}
+
 /* RECEITAS */
 main.recipes {
     width: 940px;
-    margin-bottom: 400px;
+    margin-bottom: 50px;
     display: flex;
 }
 
@@ -339,7 +368,7 @@ main.recipes {
 /* RECIPE PAGE */
 main img {
     border-radius: 15px;
-    margin-bottom: 30px;
+    margin: 20px auto 50px;
     max-width: 940px;
     max-height: 280px;
 }
@@ -352,7 +381,7 @@ main img {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 .recipe-title h1 {
@@ -391,14 +420,14 @@ main img {
 }
 
 .recipe-info li:last-child, ol:last-child {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .recipe-info p {
     font-size: 18px;
     color: #444444;
     line-height: 28px;
-    margin-bottom: 30px;
+    margin-bottom: 50px;
 }
 
 .button {
