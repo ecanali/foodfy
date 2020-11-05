@@ -811,6 +811,8 @@ form .item #photos-preview img {
 
     object-fit: none;
     object-position: 50% 50%;
+
+    margin: 0;
 }
 
 .gallery-preview {
@@ -830,9 +832,7 @@ form .item #photos-preview img {
     
     border: 1px solid #DDD;
     border-radius: 4px;
-    margin-bottom: 0;
-    margin-left: 10px;
-    margin-top: 8px;
+    margin: 8px 0px 0px 10px;
 
     object-fit: cover;
 

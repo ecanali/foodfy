@@ -1,4 +1,4 @@
-// Marcar Menu da Página Atual
+// visually shows the current page on navigation menu
 const currentPage = location.pathname
 const menuItems = document.querySelectorAll('.nav-admin a')
 
@@ -8,51 +8,47 @@ for (let item of menuItems) {
     }
 }
 
-// Adiciona campos extras em Ingredientes
+// adds extra fields on recipe Ingredients
 function addIngredient() {
     const ingredients = document.querySelector('#ingredients')
     const fieldContainer = document.querySelectorAll('.ingredient')
 
-    // Clone do último ingrediente adicionado
+    // clone from the last ingredient added
     const newField = fieldContainer[fieldContainer.length - 1].cloneNode(true)
 
-    // Não add novo input se último estiver vazio
+    // prevents add new input field if last one were empty
     if (newField.children[0].value == "") return false
 
-    // Deixa o valor do input vazio
+    // turns the input value empty
     newField.children[0].value = ""
     ingredients.appendChild(newField)
 }
 
-// Escuta clique no botão de add campo SE o campo existir na página
-// (Isso só aconteceu pq to usando o mesmo arquivo de scripts pra tudo)
+// listens the click on add new ingredient button IF it exists on the page
 const addIngredientButton = document.querySelector('.add-ingredient')
-    if (addIngredientButton) {
-        addIngredientButton.addEventListener('click', addIngredient)
-    }
+if (addIngredientButton)
+    addIngredientButton.addEventListener('click', addIngredient)
 
-// Adiciona campos extras em Modo de Preparo
+// adds extra fields on recipe Preparation Mode
 function addStep() {
     const steps = document.querySelector('#steps')
     const fieldContainer = document.querySelectorAll('.step')
 
-    // Clone do último ingrediente adicionado
+    // clone from the last ingredient added
     const newField = fieldContainer[fieldContainer.length - 1].cloneNode(true)
 
-    // Não add novo input se último estiver vazio
+    // prevents add new input field if last one were empty
     if (newField.children[0].value == "") return false
 
-    // Deixa o valor do input vazio
+    // turns the input value empty
     newField.children[0].value = ""
     steps.appendChild(newField)
 }
 
-// Escuta clique no botão de add campo SE o campo existir na página
-// (Isso só aconteceu pq to usando o mesmo arquivo de scripts pra tudo)
+// listens the click on add new step button IF it exists on the page
 const addStepButton = document.querySelector('.add-step')
-    if (addStepButton) {
-        addStepButton.addEventListener('click', addStep)
-    }
+if (addStepButton)
+    addStepButton.addEventListener('click', addStep)
 
 // IMAGES MANAGER
 const PhotosUpload = {
@@ -66,7 +62,7 @@ const PhotosUpload = {
 
         if (PhotosUpload.hasLimit(event)) return
 
-        // Uso de "Array.from()" é pra transformar a lista recebida em fileList em um Array e poder usar o forEach
+        // the use of 'Array.from()' is to transform the list received in 'fileList' into a 'Array' and can use the 'forEach' on it
         Array.from(fileList).forEach(file => {
             
             PhotosUpload.files.push(file)
@@ -112,11 +108,10 @@ const PhotosUpload = {
             }
         }
 
-
         return false
     },
     getAllFiles() {
-        // ClipboardEvent é para o Firefox, DataTransfer é para o Chrome
+        // ClipboardEvent is for Firefox, DataTransfer is for Chrome
         const dataTransfer = new ClipboardEvent("").clipboardData || new DataTransfer()
 
         PhotosUpload.files.forEach(file => dataTransfer.items.add(file))
@@ -191,7 +186,6 @@ const Validate = {
         if (results.error)
             Validate.displayError(input, results.error)
     },
-
     displayError(input, error) {
         const div = document.createElement('div')
         div.classList.add('error')
@@ -201,53 +195,18 @@ const Validate = {
         // prevents the user from leaving the field with an error
         input.focus()
     },
-
     clearErrors(input) {
         const errorDiv = input.parentNode.querySelector('.error')
 
         if (errorDiv)
             errorDiv.remove()
     },
-
     isEmail(value) {
         let error = null
         const mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 
         if (!value.match(mailFormat))
             error = "Email inválido"
-
-        return {
-            error,
-            value
-        }
-    },
-
-    isCpfCnpj(value) {
-        let error = null
-
-        const cleanValues = value.replace(/\D/g, "")
-
-        if (cleanValues.length > 11 && cleanValues.length !== 14) {
-            error = "CNPJ inválido"
-        } 
-        else if (cleanValues.length < 12 && cleanValues.length !== 11) {
-            error = "CPF inválido"
-        }
-
-        return {
-            error,
-            value
-        }
-    },
-
-    isCep(value) {
-        let error = null
-
-        const cleanValues = value.replace(/\D/g, "")
-
-        if (cleanValues.length !== 8) {
-            error = "CEP inválido"
-        } 
 
         return {
             error,

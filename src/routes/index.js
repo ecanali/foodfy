@@ -13,7 +13,6 @@ routes.use('/admin/chefs', adminChefs)
 routes.use('/admin/users', users)
 routes.use('/admin/profile', profile)
 
-// Site - Home = Client
 routes.get('/', site.index)
 routes.get('/about', function(req, res) {
     return res.render('site/about')

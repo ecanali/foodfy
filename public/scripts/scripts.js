@@ -1,4 +1,4 @@
-// Escuta clique em Receita e direciona para a Descrição dela
+// listens 'click' event on a recipe and opens it
 const recipes = document.querySelectorAll('.receita')
 
 for (let recipe of recipes) {
@@ -7,7 +7,7 @@ for (let recipe of recipes) {
     })
 }
 
-// Função botões Mostrar/Esconder na visualização de cada receita do Site
+// hides and shows recipe infos on preview
 const hideShowButtons = document.querySelectorAll('.button')
 const recipeInfos = document.querySelectorAll('.recipe-hide-show')
 
@@ -23,7 +23,7 @@ for (let i = 0; i < hideShowButtons.length; i++) {
     })
 }
 
-// Marcar Menu da Página Atual
+// visually shows the current page on navigation menu
 const currentPage = location.pathname
 const menuItems = document.querySelectorAll('nav a')
 
@@ -33,7 +33,7 @@ for (let item of menuItems) {
     }
 }
 
-// Paginação direto pelo JS no front
+// recipes list pagination strategy on frontend
 function paginate(selectedPage, totalPages) {
     let pages = [],
     oldPage
@@ -64,8 +64,8 @@ function paginate(selectedPage, totalPages) {
 function createPagination(pagination) {
     const filter = pagination.dataset.filter
 
-    // Info pode vir como string do HTML o "+" na frente transforma em Number
-    // É importante garantir isso pra não dar problema nos cálculos depois
+    // info could come from HTML as 'string', the '+' turns it in 'number'
+    // it's important to make sure it's a 'number' to avoid later calcule bugs
     const page = +pagination.dataset.page
     const total = +pagination.dataset.total
 
@@ -92,6 +92,5 @@ function createPagination(pagination) {
 
 const pagination = document.querySelector('.pagination')
 
-if (pagination) {
+if (pagination)
     createPagination(pagination)
-}
