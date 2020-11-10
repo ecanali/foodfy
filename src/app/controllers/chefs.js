@@ -195,8 +195,6 @@ module.exports = {
                 
             File.delete(oldFile.id)
 
-            // const pathString = oldFile.path
-
             if (!oldFile.path.includes("chef-placeholder"))
                 unlinkSync(oldFile.path)
 

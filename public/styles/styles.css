@@ -101,7 +101,7 @@ header nav a {
     grid-template-columns: 1fr 90px;
     align-items: center;
     grid-gap: 8px;
-    margin-left: 73px;
+    margin-left: 74px;
 }
 
 .home-filter input {
@@ -223,7 +223,7 @@ h2.h2-site {
     width: 300px;
     height: 140px;
     border-radius: 15px;
-    margin-bottom: 0;
+    margin: 0;
 }
 
 .texto-receita {
@@ -487,7 +487,7 @@ h2.h2-admin {
     grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 30px 15px;
     margin-top: 30px;
-    margin-bottom: 500px;
+    margin-bottom: 50px;
 }
 
 .receita-admin {
@@ -612,7 +612,7 @@ form {
 button.admin-button-2 {
     position: absolute;
     top: 0;
-    left: 695px;
+    left: 700px;
 }
 
 .admin-button-2 {
@@ -676,7 +676,7 @@ button.admin-button-2 {
     padding: 18px 20px;
     border: 1px solid #DDDDDD;
     border-radius: 4px;
-    width: 940px;
+    width: 100%;
     height: 257px;
     font-size: 16px;
     line-height: 24px;
@@ -759,6 +759,7 @@ form .item #photos-preview img {
 
     border-radius: 4px;
     object-fit: cover;
+    margin: 0;
 }
 
 #photos-preview .photo {

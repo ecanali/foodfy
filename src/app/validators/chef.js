@@ -1,3 +1,5 @@
+const Chef = require('../models/Chef')
+
 function checkAllFields(req) {
     // check if it has all fields
     const keys = Object.keys(req.body)
@@ -44,11 +46,12 @@ function update(req, res, next) {
 async function hasRecipes(req, res, next) {
     // does not allow chef deletion if a recipe in his/her name
     if (req.body.totalRecipes > 0) {
+        const chef = await Chef.find(req.body.id)
         const chefImage = { src: req.body.image_src }
         
         return res.render('admin/chefs/edit', {
             error: "Erro ao deletar, chef não pode ter receitas em seu nome!",
-            chef: req.body,
+            chef,
             chefImage,
             userSession: req.user
         })
