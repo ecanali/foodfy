@@ -1,5 +1,4 @@
-// Pool serve pra não precisar ficar fornecendo login/senha
-// para cada request ao banco de dados
+// Pool removes the need of login/password to each database request
 const { Pool } = require('pg')
 
 module.exports = new Pool({

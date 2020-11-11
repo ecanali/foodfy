@@ -1,13 +1,13 @@
 const express = require('express')
 const routes = express.Router()
 
+const { isLoggedRedirectToUsers, onlyUsers } = require('../app/middlewares/session')
+
 const UserController = require('../app/controllers/user')
 const SessionController = require('../app/controllers/session')
 
 const UserValidator = require('../app/validators/user')
 const SessionValidator = require('../app/validators/session')
-
-const { isLoggedRedirectToUsers, onlyUsers } = require('../app/middlewares/session')
 
 // users manager
 routes.get('/', onlyUsers, UserValidator.isAdmin, UserController.list)

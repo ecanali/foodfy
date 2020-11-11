@@ -23,7 +23,9 @@ module.exports = {
         }
     },
     create(req, res) {
-        return res.render('admin/users/create', { userSession: req.user })
+        return res.render('admin/users/create', { 
+            userSession: req.user
+        })
     },
     async post(req, res) {
         try {
@@ -76,7 +78,10 @@ module.exports = {
         try {
             const user = await User.find(req.params.id)
     
-            return res.render('admin/users/edit', { user, userSession: req.user })
+            return res.render('admin/users/edit', { 
+                user,
+                userSession: req.user
+            })
             
         } catch (error) {
             console.error(error)
@@ -143,8 +148,8 @@ module.exports = {
                 userSession: req.user
             })
 
-        } catch(err) {
-            console.error(err)
+        } catch(error) {
+            console.error(error)
 
             const users = await User.findAll()
 

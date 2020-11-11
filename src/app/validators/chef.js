@@ -16,7 +16,6 @@ function checkAllFields(req) {
 }
 
 function post(req, res, next) {    
-        // check if it has all fields
     const fillAllFields = checkAllFields(req)
 
     if (fillAllFields)
@@ -33,7 +32,6 @@ function post(req, res, next) {
 }
 
 function update(req, res, next) {
-    // check if it has all fields
     const fillAllFields = checkAllFields(req)
 
     if (fillAllFields) {
@@ -44,20 +42,25 @@ function update(req, res, next) {
 }
 
 async function hasRecipes(req, res, next) {
-    // does not allow chef deletion if a recipe in his/her name
-    if (req.body.totalRecipes > 0) {
-        const chef = await Chef.find(req.body.id)
-        const chefImage = { src: req.body.image_src }
+    try {
+        // does not allow chef deletion if a recipe in his/her name
+        if (req.body.totalRecipes > 0) {
+            const chef = await Chef.find(req.body.id)
+            const chefImage = { src: req.body.image_src }
+            
+            return res.render('admin/chefs/edit', {
+                error: "Erro ao deletar, chef não pode ter receitas em seu nome!",
+                chef,
+                chefImage,
+                userSession: req.user
+            })
+        }
+    
+        next()
         
-        return res.render('admin/chefs/edit', {
-            error: "Erro ao deletar, chef não pode ter receitas em seu nome!",
-            chef,
-            chefImage,
-            userSession: req.user
-        })
+    } catch (error) {
+        console.error(error)
     }
-
-    next()
 }
 
 module.exports = {

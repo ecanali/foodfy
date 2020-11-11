@@ -1,5 +1,6 @@
-const User = require('../models/User')
 const { compare } = require('bcryptjs')
+
+const User = require('../models/User')
 
 function checkAllFields(req) {
     // check if it has all fields
@@ -16,7 +17,7 @@ function checkAllFields(req) {
     }
 }
 
-async function isAdmin(req, res, next) {
+function isAdmin(req, res, next) {
     const user = req.user
 
     if (!user || user.is_admin == false) return res.render('admin/session/login', {
@@ -27,58 +28,64 @@ async function isAdmin(req, res, next) {
 }
 
 async function post(req, res, next) {
-    const userSession = req.user
+    try {        
+        const fillAllFields = checkAllFields(req)
     
-    // check if it has all fields
-    const fillAllFields = checkAllFields(req)
-
-    if (fillAllFields) {
-        return res.render('admin/users/create', fillAllFields)
+        if (fillAllFields) {
+            return res.render('admin/users/create', fillAllFields)
+        }
+    
+        // checks if user exists [email unique]
+        let { email } = req.body
+    
+        const user = await User.findOne({
+            where: { email }
+        })
+    
+        if (user) return res.render('admin/users/create', {
+            user: req.body,
+            error: "Usuário já cadastrado.",
+            userSession: req.user
+        })
+    
+        next()
+        
+    } catch (error) {
+        console.error(error)
     }
-
-    // check if user exists [email unique]
-    let { email } = req.body
-
-    const user = await User.findOne({
-        where: { email }
-    })
-
-    if (user) return res.render('admin/users/create', {
-        user: req.body,
-        error: "Usuário já cadastrado.",
-        userSession
-    })
-
-    next()
 }
 
 async function update(req, res, next) {
-    const user = req.user
+    try {
+        const user = req.user
+        
+        const fillAllFields = checkAllFields(req)
     
-    // check if it has all fields
-    const fillAllFields = checkAllFields(req)
-
-    if (fillAllFields) {
-        return res.render('admin/profile', fillAllFields)
+        if (fillAllFields) {
+            return res.render('admin/profile', fillAllFields)
+        }
+    
+        const { password } = req.body
+    
+        if (!password) return res.render('admin/profile/index', {
+            userSession: user,
+            user: req.body,
+            error: "Coloque sua senha para atualizar seu cadastro."
+        })
+    
+        const passed = await compare(password, user.password)
+    
+        if (!passed) return res.render("admin/profile/index", {
+            userSession: user,
+            user: req.body,
+            error: "Senha incorreta."
+        })
+    
+        next()
+        
+    } catch (error) {
+        console.error(error)
     }
-
-    const { password } = req.body
-
-    if (!password) return res.render('admin/profile/index', {
-        userSession: user,
-        user: req.body,
-        error: "Coloque sua senha para atualizar seu cadastro."
-    })
-
-    const passed = await compare(password, user.password)
-
-    if (!passed) return res.render("admin/profile/index", {
-        userSession: user,
-        user: req.body,
-        error: "Senha incorreta."
-    })
-
-    next()
 }
 
 module.exports = {

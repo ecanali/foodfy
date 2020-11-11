@@ -38,12 +38,17 @@ module.exports = {
         }
     },
     async create(req, res) {
-        const chefOptions = await Recipe.chefsSelectOptions()
-
-        return res.render('admin/recipes/create', { 
-            chefOptions, 
-            userSession: req.user 
-        })
+        try {
+            const chefOptions = await Recipe.chefsSelectOptions()
+    
+            return res.render('admin/recipes/create', { 
+                chefOptions, 
+                userSession: req.user 
+            })
+            
+        } catch (error) {
+            console.error(error)
+        }
     },
     async post(req, res) {
         try {

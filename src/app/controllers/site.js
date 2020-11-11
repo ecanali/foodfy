@@ -91,7 +91,11 @@ module.exports = {
             
                     recipes = await Promise.all(recipesPromise)
                     
-                    return res.render('site/filtered-recipes', { recipes, pagination, filter })
+                    return res.render('site/filtered-recipes', { 
+                        recipes, 
+                        pagination, 
+                        filter
+                    })
                 }
             }
         

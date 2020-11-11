@@ -1,9 +1,9 @@
 const express = require('express')
 const routes = express.Router()
 
-const ProfileController = require('../app/controllers/profile')
-
 const { onlyUsers } = require('../app/middlewares/session')
+
+const ProfileController = require('../app/controllers/profile')
 
 const UserValidator = require('../app/validators/user')
 

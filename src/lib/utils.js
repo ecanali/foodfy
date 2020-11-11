@@ -3,13 +3,13 @@ const Chef = require('../app/models/Chef')
 
 module.exports = {
     date(timestamp) {
-        // pega a data mas em formato 'local'
+        // gets the "local" format date
         const date = new Date(timestamp)
 
-        // yyyy (com UTC transformo para data em formato 'universal' = // IMPORTANTE fazer isso pra manipular depois)
+        // yyyy
         const year = date.getFullYear()
 
-        // mm (mês é de 0 a 11, +1 pra fechar os 12)
+        // mm (month is from 0 to 11, +1 to have the 12)
         const month = `0${date.getMonth() + 1}`.slice(-2)
 
         // dd
@@ -30,21 +30,31 @@ module.exports = {
         }
     },
     async getRecipeImages(recipeId, req) {
-        const results = await Recipe.files(recipeId)
-        const files = results.map(recipe => ({
-            ...recipe,
-            src:`${req.protocol}://${req.headers.host}${recipe.path.replace("public", "")}`
-            }))
+        try {
+            const results = await Recipe.files(recipeId)
+            const files = results.map(recipe => ({
+                ...recipe,
+                src:`${req.protocol}://${req.headers.host}${recipe.path.replace("public", "")}`
+                }))
+                
+            return files
             
-        return files
+        } catch (error) {
+            console.error(error)
+        }
     },
     async getChefImage(chefId, req) {
-        const results = await Chef.filesByChefId(chefId)
-        const files = results.map(chef => ({
-            ...chef,
-            src:`${req.protocol}://${req.headers.host}${chef.path.replace("public", "")}`
-            }))
+        try {
+            const results = await Chef.filesByChefId(chefId)
+            const files = results.map(chef => ({
+                ...chef,
+                src:`${req.protocol}://${req.headers.host}${chef.path.replace("public", "")}`
+                }))
+                
+            return files[0]
             
-        return files[0]
+        } catch (error) {
+            console.error(error)
+        }
     }
 }
