@@ -89,33 +89,53 @@ module.exports = {
                 ) AS total`
     
             if (filter) {
+                // order by updated_at
                 filterQuery = `
-                WHERE recipes.title ILIKE '%${filter}%'
+                    WHERE recipes.title ILIKE '%${filter}%'
                 `
     
                 totalQuery = `(
                     SELECT count(*) FROM recipes
                     ${filterQuery}
                 ) AS total`
+
+                query = `
+                    SELECT recipes.*, ${totalQuery}, chefs.name AS chef_name
+                    FROM recipes
+                    LEFT JOIN chefs ON (recipes.chef_id = chefs.id)
+                    ${filterQuery}
+                    ORDER BY updated_at DESC LIMIT $1 OFFSET $2
+                `    
+                db.query(query, [limit, offset], function(err, results) {
+                    if (err) throw `Database error! ${err}`
+                    
+                    if (results.rowCount == 0) {
+                        let notFound = "404"    
+                        callback(notFound)
+                    } else {
+                        callback(results.rows)
+                    }
+                })
+            } else {
+                // order by created_at
+                query = `
+                    SELECT recipes.*, ${totalQuery}, chefs.name AS chef_name
+                    FROM recipes
+                    LEFT JOIN chefs ON (recipes.chef_id = chefs.id)
+                    ${filterQuery}
+                    ORDER BY created_at DESC LIMIT $1 OFFSET $2
+                `    
+                db.query(query, [limit, offset], function(err, results) {
+                    if (err) throw `Database error! ${err}`
+                    
+                    if (results.rowCount == 0) {
+                        let notFound = "404"    
+                        callback(notFound)
+                    } else {
+                        callback(results.rows)
+                    }
+                })
             }
-    
-            query = `
-            SELECT recipes.*, ${totalQuery}, chefs.name AS chef_name
-            FROM recipes
-            LEFT JOIN chefs ON (recipes.chef_id = chefs.id)
-            ${filterQuery}
-            ORDER BY updated_at DESC LIMIT $1 OFFSET $2
-            `    
-            db.query(query, [limit, offset], function(err, results) {
-                if (err) throw `Database error! ${err}`
-                
-                if (results.rowCount == 0) {
-                    let notFound = "404"    
-                    callback(notFound)
-                } else {
-                    callback(results.rows)
-                }
-            })
 
         } catch (error) {
             console.error(error)

@@ -629,6 +629,7 @@ button.admin-button-2 {
     justify-content: center;
     border: none;
     margin-right: 10px;
+    cursor: pointer;
 }
 
 .item h4 {

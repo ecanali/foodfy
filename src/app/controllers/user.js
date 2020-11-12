@@ -11,7 +11,7 @@ const mailer = require('../../lib/mailer')
 module.exports = {
     async list(req, res) {
         try {
-            const users = await User.findAll()
+            const users = await User.all()
             
             return res.render('admin/users/list', { 
                 users, 
