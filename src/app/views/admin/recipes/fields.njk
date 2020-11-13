@@ -12,6 +12,7 @@
             >
             <i class="material-icons">add</i>
         </div>
+
         <div id="photos-preview">
             {% if files %}
                 {% for image in files %}
@@ -28,8 +29,7 @@
                     name="removed_files"
                 >
             {% endif %}
-        </div>
-        
+        </div> 
     </div>
 </div>
 
@@ -53,7 +53,6 @@
             <option value="" style="color:#8e8e8e">Selecione um chef</option>
 
             {% for chef in chefOptions %}
-
                 <option 
                     value="{{ chef.id }}" 
                     {% if recipe.chef_id == chef.id %} 
@@ -61,7 +60,6 @@
                     {% endif %}>
                     {{ chef.name }}
                 </option>
-
             {% endfor %}
         </select>
     </div>

@@ -6,7 +6,6 @@
 
 {% block content %}
     <main>
-
         <img src="{{ recipe.img[0].src }}" alt="{{ recipe.title }}">
         <div class="recipe-title">
             <h1>{{ recipe.title }}</h1>
@@ -17,7 +16,7 @@
             <div class="recipe-hide-show">
                 <ul>
                     {% for ingredient in recipe.ingredients %}
-                    <li>{{ ingredient }}</li>
+                        <li>{{ ingredient }}</li>
                     {% endfor %}
                 </ul>
             </div>
@@ -25,7 +24,7 @@
             <div class="recipe-hide-show hidden">
                 <ol>
                     {% for step in recipe.preparation %}
-                    <li>{{ step }}</li>
+                        <li>{{ step }}</li>
                     {% endfor %}
                 </ol>
             </div>

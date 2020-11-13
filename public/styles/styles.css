@@ -944,7 +944,7 @@ form .item #photos-preview img {
     max-width: 940px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 52px 200px;
+    gap: 52px;
     margin: 64px auto;
 }
 

@@ -17,11 +17,11 @@
             <div class="highlight">
                 {% if not files[0] %}
                     <img src="http://placehold.it/940x280?text=RECEITA SEM FOTO" />
-                {% else %}
-                    <img 
-                        src="{{ files[0].src }}" 
-                        alt="{{ files[0].name }}"
-                    >
+                    {% else %}
+                        <img 
+                            src="{{ files[0].src }}" 
+                            alt="{{ files[0].name }}"
+                        >
                 {% endif %}
             </div>
             <div class="gallery-preview">
@@ -55,7 +55,7 @@
             <div>
                 <ol>
                     {% for step in recipe.preparation %}
-                    <li>{{ step }}</li>
+                        <li>{{ step }}</li>
                     {% endfor %}
                 </ol>
             </div>

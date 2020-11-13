@@ -14,23 +14,17 @@
     </main>
 
     <section>
-        
-        
         <h2>Mais acessadas</h2>
         <div class="grid-receitas">
-            
             {% for recipe in recipes %}
-
-            <div class="receita" id="{{ recipe.id }}">
-                <img src="{{ recipe.img.src }}" alt="{{ recipe.title }}">
-                <div class="texto-receita">
-                    <h3>{{ recipe.title }}</h3>
-                    <p>por {{ recipe.chef_name }}</p>
+                <div class="receita" id="{{ recipe.id }}">
+                    <img src="{{ recipe.img.src }}" alt="{{ recipe.title }}">
+                    <div class="texto-receita">
+                        <h3>{{ recipe.title }}</h3>
+                        <p>por {{ recipe.chef_name }}</p>
+                    </div>
                 </div>
-            </div>
-
             {% endfor %}
-
         </div>
     </section>
 {% endblock content %}

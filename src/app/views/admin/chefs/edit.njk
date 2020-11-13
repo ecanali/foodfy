@@ -1,8 +1,7 @@
 {% extends '../layout.njk' %}
 
 {% block head %}
-    <title>Foodfy - Admin:
-        {{ chef.name }}</title>
+    <title>Foodfy - Admin: {{ chef.name }}</title>
 {% endblock head %}
 
 {% block content %}
@@ -24,6 +23,7 @@
             <input type="hidden" name="file_id" value="{{ chefImage.id }}">
 
         </form>
+        
         <form id="form-delete" action="/admin/chefs?_method=DELETE" method="POST">
             <input type="hidden" name="id" value="{{ chef.id }}">
             <input type="hidden" name="totalRecipes" value="{{ chef.total_recipes }}">

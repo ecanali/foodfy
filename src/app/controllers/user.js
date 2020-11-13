@@ -56,7 +56,7 @@ module.exports = {
                 is_admin
             })
 
-            const users = await User.findAll()
+            const users = await User.all()
     
             return res.render('admin/users/list', {
                 users,
@@ -140,7 +140,7 @@ module.exports = {
             
             await User.delete(req.body.id)
 
-            const users = await User.findAll()
+            const users = await User.all()
 
             return res.render('admin/users/list', {
                 success: "Usuário deletado com sucesso!",
@@ -151,7 +151,7 @@ module.exports = {
         } catch(error) {
             console.error(error)
 
-            const users = await User.findAll()
+            const users = await User.all()
 
             return res.render('admin/users/list', {
                 users,

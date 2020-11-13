@@ -5,31 +5,27 @@
 {% endblock head %}
 
 {% block content %}
-
     <section>
         <div class="header-index">
             <h2 class="h2-admin">Gerenciar receitas</h2>
             <a href="/admin/recipes/create" class="admin-button-1">Nova receita</a>
         </div>
+
         <div class="grid-receitas-admin">
-            
             {% for recipe in recipes %}
-
-            <div class="receita-admin" id="{{ recipe.id }}">
-                <img src="{{ recipe.img.src }}" alt="{{ recipe.title }}">
-                <div class="texto-receita-admin">
-                    <h3>{{ recipe.title }}</h3>
-                    <p>por {{ recipe.chef_name }}</p>
-                    <a href="/admin/recipes/{{ recipe.id }}">Visualizar</a>
+                <div class="receita-admin" id="{{ recipe.id }}">
+                    <img src="{{ recipe.img.src }}" alt="{{ recipe.title }}">
+                    <div class="texto-receita-admin">
+                        <h3>{{ recipe.title }}</h3>
+                        <p>por {{ recipe.chef_name }}</p>
+                        <a href="/admin/recipes/{{ recipe.id }}">Visualizar</a>
+                    </div>
                 </div>
-            </div>
-
             {% endfor %}
-
         </div>
     </section>
 
-        <script src="/lottie.min.js"></script>
+    <script src="/lottie.min.js"></script>
     
     <script>
         const deleteElement = document.querySelector('#delete-success-lottie')

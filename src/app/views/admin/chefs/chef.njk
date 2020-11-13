@@ -18,9 +18,10 @@
             {% if chef.total_recipes == 1 %}
                 <h3>{{ chef.total_recipes }} receita</h3>
                 {% else %}
-                <h3>{{ chef.total_recipes }} receitas</h3>
+                    <h3>{{ chef.total_recipes }} receitas</h3>
             {% endif %}
         </div>
+
         <section>
             <div class="header-index">
                 <h2 class="h2-chef-admin">Receitas</h2>
@@ -38,5 +39,6 @@
                 {% endfor %}
             </div>
         </section>
+        
     </main>
 {% endblock content %}
