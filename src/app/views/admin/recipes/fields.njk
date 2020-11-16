@@ -9,6 +9,12 @@
                 multiple
                 accept="image/*"
                 onchange="PhotosUpload.handleFileInput(event)"
+                style="display: none;"
+            >
+            <input 
+                type="button" 
+                class="photos-input" 
+                onclick="document.getElementById('photos-input').click()"
             >
             <i class="material-icons">add</i>
         </div>

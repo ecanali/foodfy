@@ -97,12 +97,12 @@ module.exports = {
                 is_admin: isAdmin || 0
             })
 
-            const user = await User.find(id)
+            const users = await User.all()
     
-            return res.render('admin/users/edit', {
+            return res.render('admin/users/list', {
+                users,
                 userSession: req.user,
-                user,
-                success: "Conta atualizada com sucesso!",
+                success: "Conta atualizada com sucesso!"
             })
 
         } catch (error) {

@@ -61,7 +61,8 @@ module.exports = {
             
             return res.render('admin/chefs/index', { 
                 chefs: lastAdded, 
-                userSession: req.user 
+                userSession: req.user,
+                success: "Chef criado com sucesso!"
             })
             
         } catch (error) {

@@ -27,11 +27,16 @@
     <div class="avatar-upload">
         <input 
             id="photos-input"
-            class="avatar-input"
             type="file" 
             name="photos" 
             accept="image/*"
             onchange="PhotosUpload.handleFileInput(event)"
+            style="display: none"
+        >
+        <input 
+            type="button" 
+            class="avatar-input" 
+            onclick="document.getElementById('photos-input').click()"
         >
         Enviar Avatar
     </div>

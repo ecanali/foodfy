@@ -721,7 +721,7 @@ form .item #photos-upload {
     justify-content: center;
 }
 
-form .item #photos-upload #photos-input {
+form .item .photos-input {
     position: absolute;
     top: 0;
     left: 0;
@@ -867,7 +867,7 @@ form .item #photos-preview img {
     margin-top: 5px;
 }
 
-#photos-input.avatar-input {
+.item div input.avatar-input {
     position: absolute;
     top: 0;
     left: 0;
@@ -1044,7 +1044,7 @@ form .item #photos-preview img {
 /* MESSAGES */
 @keyframes hide-message {
     to {
-        top: -50px;
+        top: -100px;
         opacity: 0;
     }
 }
