@@ -1,0 +1,139 @@
+header.nav-admin {
+    background-color: var(--titles-color);
+    height: 80px;
+    width: 100%;
+    max-width: none;
+    display: flex;
+    align-items: center;
+    margin-bottom: 50px;
+}
+
+nav.nav-admin {
+    min-width: 940px;
+    position: relative;
+}
+
+.nav-admin a {
+    margin-right: 30px;
+    font-weight: bold;
+    font-size: 15px;
+    line-height: 18px;
+    color: #999999;
+}
+
+.nav-admin a.active {
+    font-weight: bold;
+    color: #FFFFFF;
+}
+
+.nav-admin a:first-child {
+    margin-right: 50px;
+}
+
+.header-index {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+h2.h2-admin {
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 28px;
+    color: var(--titles-color);
+    margin-bottom: 0px;
+}
+
+.admin-buttons {
+    display: flex;
+}
+
+.recipe-header-admin a,
+.admin-button-1 {
+    background-color: #6558C3;
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 19px;
+    padding: 9px 20px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    min-width: 139px;
+}
+
+form {
+    min-width: 940px;
+}
+
+button.admin-button-2 {
+    position: absolute;
+    top: 0;
+    left: 700px;
+}
+
+.admin-button-2 {
+    background-color: #DC4747;
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 19px;
+    padding: 9px 20px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.item h4 {
+    font-size: 16px;
+    line-height: 19px;
+    font-weight: bold;
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+
+.item div input {
+    padding: 15px 20px;
+    border: 1px solid #DDDDDD;
+    border-radius: 4px;
+    width: 100%;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.chef-admin h3,
+.receita-admin h3,
+.user-admin h3 {
+    font-size: 18px;
+    line-height: 21px;
+    color: var(--titles-color);
+}
+
+.receita-admin p,
+.user-admin p {
+    margin-top: 5px;
+    font-size: 14px;
+    line-height: 16px;
+    color: #777777;
+}
+
+.chef-admin a,
+.receita-admin a {
+    font-weight: bold;
+    color: #6558C3;
+    font-size: 14px;
+    line-height: 16px;
+    cursor: pointer;
+    display: inline-block;
+    margin-top: 10px;
+}

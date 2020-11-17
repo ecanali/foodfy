@@ -1,0 +1,82 @@
+.grid-chefs-admin {
+    max-width: 940px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 30px 15px;
+    margin-top: 30px;
+    margin-bottom: 50px;
+}
+
+.chef-admin {
+    display: flex;
+    align-items: center;
+}
+
+.chef-admin img {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    margin: 0px 20px 0px 0px;
+}
+
+.chef-admin h4 {
+    font-size: 14px;
+    line-height: 16px;
+    color: #666666;
+    margin-top: 5px;
+}
+
+.chef-img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    align-self: center;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+.h2-chef-admin {
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 28px;
+    color: var(--titles-color);
+    margin-bottom: 0px;
+    margin-top: 40px;
+}
+
+.avatar-upload {
+    position: relative;
+    height: 37px;
+    width: 139px;
+    background-color: #6558C3;
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 19px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+.item div input.avatar-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    display: block;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+
+    padding: 0;
+
+    cursor: pointer;
+}
+
+.avatar-url {
+    color: #999999;
+}

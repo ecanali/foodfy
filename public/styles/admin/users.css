@@ -1,0 +1,88 @@
+.user-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 40px;
+
+    margin-top: 34px;
+    margin-bottom: 23px;
+
+}
+
+.admin-checkbox {
+    display: flex;
+    align-items: center;
+
+
+}
+
+.admin-checkbox input {
+    width: 15px;
+    height: 15px;
+    
+    margin-right: 8px;
+}
+
+.admin-checkbox h4 {
+    font-size: 16px;
+    line-height: 19px;
+    font-weight: bold;
+}
+
+.cancel-button {
+    position: absolute;
+    top: 0;
+    left: 645px;
+    background-color: #8A8A8A;
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 19px;
+    text-align: center;
+    padding: 9px 20px;
+    border-radius: 4px;
+    min-width: 139px;
+}
+
+.error {
+    background-color: #DC4747;
+    padding: 4px;
+    border-radius: 4px;
+    color: #FFF;
+}
+
+.grid-users-admin {
+    max-width: 940px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 52px;
+    margin: 64px auto;
+}
+
+.user-admin a {
+    font-weight: bold;
+    color: #6558C3;
+    font-size: 14px;
+    line-height: 16px;
+    cursor: pointer;
+    display: inline-block;
+    margin-top: 16px;
+    margin-right: 16px;
+}
+
+.user-content form.delete-user-form {
+    min-width: 0;
+    display: inline-block;
+}
+
+.user-content form.delete-user-form button {
+    appearance: none;
+    border: none;
+    background-color: white;
+
+    font-weight: bold;
+    color:#F55A5A;
+    font-size: 14px;
+    line-height: 16px;
+    cursor: pointer;
+    margin-top: 16px;
+}

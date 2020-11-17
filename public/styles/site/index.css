@@ -1,0 +1,81 @@
+/* NAVIGATION */
+header {
+    max-width: 940px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+header nav {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 36px;
+    margin-bottom: 30px;
+}
+
+header nav a:first-child {
+    margin-right: 120px;
+    align-self: flex-end;
+}
+
+header nav a {
+    margin-right: 30px;
+    font-size: 16px;
+    line-height: 19px;
+    color: var(--titles-color)
+}
+
+.sublinhado:hover {
+    border-bottom: 1px solid;
+}
+
+.sublinhado.active {
+    font-weight: bold;
+}
+
+/* FILTER */
+.home-filter {
+    min-width: 345px;
+    display: grid;
+    grid-template-columns: 1fr 90px;
+    align-items: center;
+    grid-gap: 8px;
+    margin-left: 74px;
+}
+
+.home-filter input {
+    color: #999999;
+    border: 1px solid #DDDDDD;
+    padding: 10px 15px;
+    border-radius: 4px;
+    font-size: 14px;
+    line-height: 16px;
+    box-sizing: border-box;
+}
+
+.home-filter button {
+    background: #6558C3;
+    cursor: pointer;
+    color: #FFFFFF;
+    text-align: center;
+    padding: 9px 20px;
+    font-size: 16px;
+    line-height: 19px;
+    font-weight: bold;
+    border-radius: 4px;
+    border: none;
+}
+
+/* FOOTER */
+footer {
+    margin-top: auto;
+}
+
+.rodape {
+    background-color: #EEEEEE;
+    text-align: center;
+    padding: 20px;
+    font-size: 14px;
+    color: #999999;
+}
