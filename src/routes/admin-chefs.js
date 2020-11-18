@@ -4,18 +4,18 @@ const routes = express.Router()
 const multer = require('../app/middlewares/multer')
 const { onlyUsers } = require('../app/middlewares/session')
 
-const chefs = require('../app/controllers/chefs')
+const ChefsController = require('../app/controllers/chefs')
 
 const UserValidator = require('../app/validators/user')
 const ChefValidator = require('../app/validators/chef')
 
-routes.get('/', onlyUsers, chefs.index)
-routes.get('/create', onlyUsers, UserValidator.isAdmin, chefs.create)
-routes.get('/:id', onlyUsers, chefs.show)
-routes.get('/:id/edit', onlyUsers, UserValidator.isAdmin, chefs.edit)
+routes.get('/', onlyUsers, ChefsController.index)
+routes.get('/create', onlyUsers, UserValidator.isAdmin, ChefsController.create)
+routes.get('/:id', onlyUsers, ChefsController.show)
+routes.get('/:id/edit', onlyUsers, UserValidator.isAdmin, ChefsController.edit)
 
-routes.post('/', multer.array('photos', 1), onlyUsers, UserValidator.isAdmin, ChefValidator.post, chefs.post)
-routes.put('/', multer.array('photos', 1), onlyUsers, UserValidator.isAdmin, ChefValidator.update, chefs.put)
-routes.delete('/', onlyUsers, UserValidator.isAdmin, ChefValidator.hasRecipes, chefs.delete)
+routes.post('/', multer.array('photos', 1), onlyUsers, UserValidator.isAdmin, ChefValidator.post, ChefsController.post)
+routes.put('/', multer.array('photos', 1), onlyUsers, UserValidator.isAdmin, ChefValidator.update, ChefsController.put)
+routes.delete('/', onlyUsers, UserValidator.isAdmin, ChefValidator.hasRecipes, ChefsController.delete)
 
 module.exports = routes

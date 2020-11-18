@@ -8,10 +8,10 @@ const Recipe = require('./src/app/models/Recipe')
 
 let usersIds = [],
     chefsIds = [],
-    totalUsers = 2,
-    totalChefs = 2,
-    totalRecipes = 3,
-    totalRecipesImages = 9
+    totalUsers = 6,
+    totalChefs = 6,
+    totalRecipes = 9,
+    totalRecipesImages = 27
 
 async function createUsers() {
     try {
@@ -43,7 +43,7 @@ async function createChefs() {
         while (chefs.length < totalChefs) {
             const fileId = await File.create({
                 name: faker.image.image(),
-                path: `public/assets/chef-placeholder${Math.ceil(Math.random() * 6)}.jpeg`
+                path: `public/images/chef-placeholder${Math.ceil(Math.random() * 6)}.jpeg`
             })
     
             chefs.push({
@@ -85,7 +85,7 @@ async function createRecipes() {
         while (files.length < totalRecipesImages) {
             files.push({
                 name: faker.image.image(),
-                path: `public/assets/recipe-placeholder${Math.ceil(Math.random() * 6)}.png`
+                path: `public/images/recipe-placeholder${Math.ceil(Math.random() * 6)}.png`
             })
         }
     
