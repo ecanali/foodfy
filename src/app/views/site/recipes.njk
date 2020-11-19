@@ -9,7 +9,12 @@
         <div class="grid-receitas">
             {% for recipe in recipes %}
                 <div class="receita" id="{{ recipe.id }}">
-                    <img src="{{ recipe.img.src }}" alt="{{ recipe.title }}">
+                    {% if not recipe.img %}
+                        <img src="http://placehold.it/940x280?text=RECEITA SEM FOTO" />
+                    {% else %}
+                        <img src="{{ recipe.img.src }}" alt="{{ recipe.title }}">
+                    {% endif %}
+                    
                     <div class="texto-receita">
                         <h3>{{ recipe.title }}</h3>
                         <p>por {{ recipe.chef_name }}</p>
