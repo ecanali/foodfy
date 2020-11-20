@@ -1,4 +1,4 @@
 node_modules
+.vscode/
+.DS_Store
 LEIA-ME.txt
-postgreSQL_start.txt
-package-lock.json

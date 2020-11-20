@@ -100,7 +100,12 @@ main img {
     margin-right: 18px;
 }
 
+.pagination a.active {
+    font-weight: bold;
+}
+
 .pagination a:hover {
     filter: brightness(0.3);
     border-bottom: 1px solid var(--titles-color);
+    font-weight: bold;
 }

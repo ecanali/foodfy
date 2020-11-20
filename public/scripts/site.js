@@ -94,3 +94,16 @@ const pagination = document.querySelector('.pagination')
 
 if (pagination)
     createPagination(pagination)
+
+// visually shows the current page on recipes pagination
+const currentPageSearch = location.search
+
+if (currentPageSearch.includes("?page=")) {
+    const aElements = document.getElementsByClassName('pagination')[0].childNodes
+
+    for (let aElement of aElements) {
+        if (currentPageSearch.includes(aElement.getAttribute('href'))) {
+            aElement.classList.add('active')
+        }
+    }
+}
