@@ -10,8 +10,8 @@ let usersIds = [],
     chefsIds = [],
     totalUsers = 6,
     totalChefs = 6,
-    totalRecipes = 9,
-    totalRecipesImages = 27
+    totalRecipes = 12,
+    totalRecipesImages = 36
 
 async function createUsers() {
     try {
