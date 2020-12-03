@@ -88,6 +88,7 @@ Antes de começar, você vai precisar ter instalado em sua máquina as seguintes
 
 # Clone este repositório
 $ git clone https://github.com/ecanali/foodfy
+
 # Acesse a pasta do projeto pelo terminal/cmd
 $ cd foodfy
 
