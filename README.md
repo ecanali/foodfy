@@ -118,7 +118,7 @@ $ .\pg_ctl.exe -D "C:\Program Files\PostgreSQL\12\data" stop
 
 ```
 
-Depois de ligar o PostgreSQL, acesse o Postbird e crie um banco de dados com o nome de foodfy. Feito isso, clique na opção de importar um arquivo .sql e importe o arquivo [database.sql](https://github.com/ecanali/foodfy/blob/master/database.sql) presente neste respositório. Você pode checar se o banco foi importado verificando suas tabelas. Se tudo deu certo até aqui, o seu banco de dados já está criado. 
+Depois de ligar o PostgreSQL, acesse o Postbird e crie um banco de dados com o nome de foodfy. Feito isso, clique na opção de importar um arquivo .sql e importe o arquivo [database.sql](https://github.com/ecanali/foodfy/blob/master/database.sql) presente neste repositório. Você pode checar se o banco foi importado verificando suas tabelas. Se tudo deu certo até aqui, o seu banco de dados já está criado. 
 
 #### Observações
 
@@ -157,7 +157,7 @@ module.exports = nodemailer.createTransport({
 
 ```
 
-É importante que o código preenchido no aquivo mailer.js seja o gerado em sua conta do Mailtrap, caso contrário você não receberá os e-mails corretamente.
+É importante que o código preenchido no arquivo mailer.js seja o gerado em sua conta do Mailtrap, caso contrário você não receberá os e-mails corretamente.
 
 ### Executar o projeto.
 
@@ -173,7 +173,7 @@ $ cd foodfy
 # Execute a aplicação
 $ npm start
 
-# O servidor inciará na porta:3000 - acesse http://localhost:3000
+# O servidor iniciará na porta:3000 - acesse http://localhost:3000
 
 ```
 
